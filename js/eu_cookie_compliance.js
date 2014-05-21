@@ -66,7 +66,7 @@
       popup.prependTo("body");
       var height = popup.height();
       popup.show()
-        .attr({"class": "sliding-popup-top"})
+        .attr({"class": "sliding-popup-top clearfix"})
         .css({"top": -1 * height})
         .animate({top: 0}, Drupal.settings.eu_cookie_compliance.popup_delay);
     } else {
