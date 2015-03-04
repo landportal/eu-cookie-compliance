@@ -108,9 +108,7 @@
   }
 
   Drupal.eu_cookie_compliance.getCurrentStatus = function() {
-	name = 'cookie-agreed';
-	value = Drupal.eu_cookie_compliance.getCookie(name);
-	return value;
+    return Drupal.eu_cookie_compliance.getCookie('cookie-agreed');
   }
 
   Drupal.eu_cookie_compliance.changeStatus = function(value) {
