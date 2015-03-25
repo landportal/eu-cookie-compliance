@@ -7,8 +7,6 @@
  * Author: Marcin Pajdzik
  */
 
-include_once 'eu_cookie_compliance.country_list.inc';
-
 /**
  * Implements hook_menu().
  */
@@ -22,64 +20,6 @@ function eu_cookie_compliance_menu() {
     'file' => 'eu_cookie_compliance.admin.inc',
   );
   return $items;
-}
-
-/**
- * Implements hook_cookie_compliance_country_info()
- */
-
-function eu_cookie_compliance_cookie_compliance_country_info() {
-	$info = array();
-	
-	if (module_exists('smart_ip')) {
-		$info['smart_ip'] = array(
-			'name' => t('Smart IP'),
-			'description' => t('Use the <a href="http://drupal.org/project/smart_ip">smart_ip</a> module'),
-			'callback' => 'eu_cookie_compliance_smart_ip_provider',
-		);
-	}
-	if (module_exists('geoip')) {
-		$info['geoip'] = array(
-			'name' => t('GeoIP'),
-			'description' => t('Use the <a href="http://drupal.org/project/geoip">geoip</a> module'),
-			'callback' => 'eu_cookie_compliance_geoip_provider',
-		);
-	}
-	
-	return $info;
-}
-
-/**
- * Use Smart IP to get active country
- */
-
-function eu_cookie_compliance_smart_ip_provider(){
-	$country_code = '';
-	if(module_exists('smart_ip')) {
-    $smart_ip_session = smart_ip_session_get('smart_ip');
-    $country_code = isset($smart_ip_session['location']['country_code']) ? $smart_ip_session['location']['country_code'] : NULL;
-  }
-  return $country_code;
-}
-
-/**
- * Use GeoIP to get active country
- */
-
-function eu_cookie_compliance_geoip_provider() {
-	$country_code = '';
-	if(module_exists('geoip')) {
-    $country_code = geoip_country_code();
-  }
-  return $country_code;
-}
-
-/**
- * Fallback if no country providers are selected
- */
-
-function eu_cookie_compliance_fallback_provider() {
-  return NULL;
 }
 
 /**
@@ -109,15 +49,17 @@ function eu_cookie_compliance_page_build(&$page) {
     $path_match = drupal_match_path($path, $popup_settings['exclude_paths']);
   }
 
-  if (isset($popup_settings['limit_countries']) && $popup_settings['limit_countries']) {
-    $country_code = '';
-    if (isset($popup_settings['country_provider'])) {
-			$func = $popup_settings['country_provider'];
-			$country_code = $func();
-		}
-		
+  if (isset($popup_settings['eu_only']) && $popup_settings['eu_only']) {
+    //use the geoip function if exists
+    $country_code = function_exists('geoip_country_code_by_name') ? geoip_country_code_by_name(ip_address()) : '';
+    if(module_exists('geoip')) {
+      $country_code = geoip_country_code();
+    } elseif(module_exists('smart_ip')) {
+       $smart_ip_session = smart_ip_session_get('smart_ip');
+       $country_code = isset($smart_ip_session['location']['country_code']) ? $smart_ip_session['location']['country_code'] : NULL;
+    }
     $geoip_match = false;
-    if (in_array(strtoupper($country_code), eu_cookie_compliance_list_to_array($popup_settings['country_list']))) {
+    if ( in_array($country_code, array(NULL, 'BE', 'BG', 'CZ', 'DK', 'DE', 'EE', 'GB', 'IE', 'EL', 'ES', 'FR', 'HR', 'IT', 'CY', 'LV', 'LT', 'LU', 'HU', 'MT', 'NL', 'NO', 'AT', 'PL', 'PT', 'RO', 'SI', 'SK', 'FI', 'SE', 'UK'))) {
       $geoip_match = true;
     }
     if ($country_code == '')
@@ -127,6 +69,7 @@ function eu_cookie_compliance_page_build(&$page) {
   } else {
     $geoip_match = true;
   }
+
   if (!empty($popup_settings['popup_enabled']) && user_access('display EU Cookie Compliance popup') && $geoip_match && $domain_allow && !$path_match) {
     global $language;
     // Array storage for caching full client data.

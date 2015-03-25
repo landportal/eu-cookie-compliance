@@ -19,7 +19,7 @@ function eu_cookie_compliance_admin_form($form_state) {
     '#default_value' => variable_get('eu_cookie_compliance_domain', ''),
     '#description' => t('Sets the domain of the cookie to a specific url.  Used when you need consistency across domains.  This is language independent.'),
   );
-  
+
   $form['eu_cookie_compliance_cookie_lifetime'] = array(
     '#type' => 'textfield',
     '#title' => t('Cookie lifetime'),
@@ -49,60 +49,13 @@ function eu_cookie_compliance_admin_form($form_state) {
     '#description' => t('By default by clicking any link on the website the visitor accepts the cookie policy. Uncheck this box if you do not require this functionality. You may want to edit the pop-up message below accordingly.'),
   );
 
-	$form['eu_cookie_compliance_' . $ln]['limit_countries'] = array(
-		'#type' => 'checkbox',
-		'#title' => t('Limit the popup display to a defined list of countries'),
-		'#default_value' => isset($popup_settings['limit_countries']) ? $popup_settings['limit_countries'] : 0,
-	);
-  
-  //Build List of country provider options
-  
-  $result = array();
-  foreach (module_implements('cookie_compliance_country_info') as $module) {
-		$info = module_invoke($module, 'cookie_compliance_country_info');
-		foreach($info as $key => $i) {
-			$result[$key] = $i;
-		}
-	}
-
-	$provider_opt = array();
-	foreach($result as $r) {
-		$provider_opt[$r['callback']] = $r['name'] . ': ' . $r['description'];
-	}
-
-	$form['eu_cookie_compliance_' . $ln]['country_provider'] = array(
-    '#type' => 'radios',
-    '#title' => t('Select a country code provider'),
-    '#options' => !empty($provider_opt) ? $provider_opt : array('eu_cookie_compliance_fallback_provider' => 'No country providers found'),
-    '#default_value' => isset($popup_settings['country_provider']) ? $popup_settings['country_provider'] : 'eu_cookie_compliance_fallback_provider',
-    '#description' => 'Select a provider which will return a two-letter country code for evaluation. 
-			You may install/enable <a href="http://drupal.org/project/smart_ip">Smart IP</a> 
-			or <a href="http://drupal.org/project/geoip">GeoIP</a> if you wish to use them.',
-    '#states' => array(
-		  'visible' => array(
-		  	':input[name="eu_cookie_compliance_' . $ln . '[limit_countries]"]' => array('checked' => true),
-		  ),
-		  'required' => array(
-		  	':input[name="eu_cookie_compliance_' . $ln . '[limit_countries]"]' => array('checked' => true),
-		  ),
-    ),
-  );
-
-	$form['eu_cookie_compliance_' . $ln]['country_list'] = array(
-		'#type' => 'textfield',
-		'#title' => t('Limit to these countries'),
-		    '#default_value' => isset($popup_settings['country_list']) ? $popup_settings['country_list'] : eu_cookie_compliance_array_to_list(array('BE', 'BG', 'CZ', 'DK', 'DE', 'EE', 'GB', 'IE', 'EL', 'ES', 'FR', 'HR', 'IT', 'CY', 'LV', 'LT', 'LU', 'HU', 'MT', 'NL', 'NO', 'AT', 'PL', 'PT', 'RO', 'SI', 'SK', 'FI', 'SE', 'UK')),
-		'#description' => 'Default EU list: BE,BG,CZ,DK,DE,EE,GB,IE,EL,ES,FR,HR,IT,CY,LV,LT,LU,HU,MT,NL,NO,AT,PL,PT,RO,SI,SK,FI,SE,UK',
-		'#states' => array(
-		  'visible' => array(
-		  	':input[name="eu_cookie_compliance_' . $ln . '[limit_countries]"]' => array('checked' => true),
-		  ),
-		  'required' => array(
-		  	':input[name="eu_cookie_compliance_' . $ln . '[limit_countries]"]' => array('checked' => true),
-		  ),
-    ),
-	);
-	
+  if (module_exists('geoip') || module_exists('smart_ip') || function_exists('geoip_country_code_by_name') ){
+    $form['eu_cookie_compliance_' . $ln]['eu_only'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Only display popup in EU countries (using the <a href="http://drupal.org/project/geoip">geoip</a> module or the <a href="http://drupal.org/project/smart_ip">smart_ip</a> module or the <a href="http://www.php.net/manual/fr/function.geoip-country-code-by-name.php">geoip_country_code_by_name()</a> PHP function)'),
+      '#default_value' => isset($popup_settings['eu_only']) ? $popup_settings['eu_only'] : 0,
+    );
+  }
 
   $form['eu_cookie_compliance_' . $ln]['popup_position'] = array(
     '#type' => 'checkbox',
@@ -257,6 +210,7 @@ function eu_cookie_compliance_admin_form($form_state) {
     '#default_value' => isset($popup_settings['domains_list']) ? $popup_settings['domains_list'] : '',
     '#description' => t("Specify domains with protocol (e.g. http or https). Enter one domain per line."),
   );
+
   $form['eu_cookie_compliance_' . $ln]['exclude_paths'] = array(
     '#type' => 'textarea',
     '#title' => t('Exclude paths'),
