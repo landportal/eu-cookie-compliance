@@ -29,7 +29,8 @@ function eu_cookie_compliance_menu() {
  */
 function eu_cookie_compliance_page_build(&$page) {
   $popup_settings = eu_cookie_compliance_get_settings();
-  // Check Add/Remove domains.
+  global $theme;
+  // Check Add/Remove domains
   $domain_allow = TRUE;
   $domain_option = isset($popup_settings['domains_option']) ? $popup_settings['domains_option'] : 1;
   if (isset($popup_settings['domains_list'])) {
@@ -77,7 +78,7 @@ function eu_cookie_compliance_page_build(&$page) {
     global $language;
     // Array storage for caching full client data.
     $data = array();
-    if ($cache = cache_get('eu_cookie_compliance_client_settings_' . $language->language, 'cache')) {
+    if($cache = cache_get('eu_cookie_compliance_client_settings_' . $theme . '_' . $language->language, 'cache')) {
       $data = $cache->data;
     }
     else {
@@ -122,7 +123,7 @@ function eu_cookie_compliance_page_build(&$page) {
         'domain' => variable_get('eu_cookie_compliance_domain', ''),
         'cookie_lifetime' => variable_get('eu_cookie_compliance_cookie_lifetime', 100),
       );
-      cache_set('eu_cookie_compliance_client_settings_' . $language->language, $data, 'cache', CACHE_TEMPORARY);
+      cache_set('eu_cookie_compliance_client_settings_' . $theme . '_' . $language->language, $data, 'cache', CACHE_TEMPORARY);
     }
     drupal_add_css($data['css'], array('type' => 'inline'));
     drupal_add_js(array('eu_cookie_compliance' => $data['variables']), array('type' => 'setting', 'scope' => 'footer'));
