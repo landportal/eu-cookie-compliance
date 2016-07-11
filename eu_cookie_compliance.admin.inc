@@ -308,7 +308,7 @@ function eu_cookie_compliance_admin_form_validate($form, &$form_state) {
   if (!preg_match('/^[1-9][0-9]{0,4}$/', $form_state['values']['eu_cookie_compliance_' . $ln]['popup_height']) && !empty($form_state['values']['eu_cookie_compliance_' . $ln]['popup_height'])) {
     form_set_error('eu_cookie_compliance_' . $ln . '][popup_height', t('Height must be an integer value .'));
   }
-  if (!preg_match('/^[1-9][0-9]{0,4}$/', $form_state['values']['eu_cookie_compliance_' . $ln]['popup_delay'])) {
+  if ((!preg_match('/^[1-9][0-9]{0,4}$/', $form_state['values']['eu_cookie_compliance_' . $ln]['popup_delay'])) && ($form_state['values']['eu_cookie_compliance_' . $ln]['popup_delay'] != "0")) {
     form_set_error('eu_cookie_compliance_' . $ln . '][popup_delay', t('Delay must be an integer value.'));
   }
   if (!preg_match('/^[1-9][0-9]{0,4}\%?$/', $form_state['values']['eu_cookie_compliance_' . $ln]['popup_width'])) {
