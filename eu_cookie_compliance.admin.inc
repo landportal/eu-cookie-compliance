@@ -243,8 +243,8 @@ function eu_cookie_compliance_admin_form($form_state) {
 
   $form['advanced']['eu_cookie_compliance_' . $ln]['popup_delay'] = array(
     '#type' => 'textfield',
-    '#title' => t('Popup time delay in seconds'),
-    '#default_value' => isset($popup_settings['popup_delay']) ? $popup_settings['popup_delay'] : 1,
+    '#title' => t('Popup time delay in miliseconds'),
+    '#default_value' => isset($popup_settings['popup_delay']) ? $popup_settings['popup_delay'] : 1000,
     '#size' => 5,
     '#maxlength' => 5,
     '#required' => TRUE,
@@ -290,7 +290,7 @@ function eu_cookie_compliance_admin_form($form_state) {
     '#description' => t("Specify pages by using their paths. Enter one path per line. The '*' character is a wildcard. Example paths are %blog for the blog page and %blog-wildcard for every personal blog. %front is the front page.", array('%blog' => 'blog', '%blog-wildcard' => 'blog/*', '%front' => '<front>')),
   );
 
-  $form[['advanced']'eu_cookie_compliance_' . $ln]['exclude_admin_pages'] = array(
+  $form['advanced']['eu_cookie_compliance_' . $ln]['exclude_admin_pages'] = array(
     '#type' => 'checkbox',
     '#title' => t('Exclude admin pages'),
     '#default_value' => isset($popup_settings['exclude_admin_pages']) ? $popup_settings['exclude_admin_pages'] : '',

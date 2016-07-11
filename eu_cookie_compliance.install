@@ -43,3 +43,28 @@ function eu_cookie_compliance_uninstall() {
   }
   cache_clear_all('variables', 'cache');
 }
+
+/**
+ * Change the popup delay from seconds to milliseconds.
+ */
+function eu_cookie_compliance_update_7000(&$sandbox = NULL) {
+  global $language;
+  if (module_exists('locale')) {
+    $langs = locale_language_list();
+    foreach ($langs as $key => $lang) {
+      $eu_cookie_settings = variable_get('eu_cookie_compliance_' . $key, array());
+      if (!empty($eu_cookie_settings['popup_delay'])) {
+        $eu_cookie_settings['popup_delay'] *= 1000;
+        variable_set('eu_cookie_compliance_' . $key, $eu_cookie_settings);
+      }
+    }
+  }
+  else {
+    $lang = ($language->language) ? $language->language : 'en';
+    $eu_cookie_settings = variable_get('eu_cookie_compliance_' . $lang, array());
+    if (!empty($eu_cookie_settings['popup_delay'])) {
+      $eu_cookie_settings['popup_delay'] *= 1000;
+      variable_set('eu_cookie_compliance_' . $lang, $eu_cookie_settings);
+    }
+  }
+}
