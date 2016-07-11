@@ -9,6 +9,8 @@
  * Implements hook_install().
  */
 function eu_cookie_compliance_install() {
+  global $language;
+
   $popup_settings = array(
     'popup_info' => array(
       'value' => '<h2>We use cookies on this site to enhance your user experience</h2><p>By clicking any link on this page you are giving your consent for us to set cookies.</p>',
@@ -19,7 +21,6 @@ function eu_cookie_compliance_install() {
       'format' => filter_default_format(),
     ),
   );
-  global $language;
   $lang = ($language->language) ? $language->language : 'en';
   variable_set('eu_cookie_compliance_' . $lang, $popup_settings);
 }
@@ -28,12 +29,15 @@ function eu_cookie_compliance_install() {
  * Implements hook_uninstall().
  */
 function eu_cookie_compliance_uninstall() {
-  if(module_exists('locale')) {
+  global $language;
+
+  if (module_exists('locale')) {
     $langs = locale_language_list();
-    foreach($langs as $key => $lang) {
+    foreach ($langs as $key => $lang) {
       variable_del('eu_cookie_compliance_' . $key);
     }
-  } else {
+  }
+  else {
     $lang = ($language->language) ? $language->language : 'en';
     variable_del('eu_cookie_compliance_' . $lang);
   }
