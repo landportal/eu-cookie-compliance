@@ -290,6 +290,12 @@ function eu_cookie_compliance_admin_form($form_state) {
     '#description' => t("Specify pages by using their paths. Enter one path per line. The '*' character is a wildcard. Example paths are %blog for the blog page and %blog-wildcard for every personal blog. %front is the front page.", array('%blog' => 'blog', '%blog-wildcard' => 'blog/*', '%front' => '<front>')),
   );
 
+  $form[['advanced']'eu_cookie_compliance_' . $ln]['exclude_admin_pages'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Exclude admin pages'),
+    '#default_value' => isset($popup_settings['exclude_admin_pages']) ? $popup_settings['exclude_admin_pages'] : '',
+  );
+
   return system_settings_form($form);
 }
 

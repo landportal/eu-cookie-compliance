@@ -52,6 +52,12 @@ function eu_cookie_compliance_page_build(&$page) {
     $path_match = drupal_match_path($path, $popup_settings['exclude_paths']);
   }
 
+  // Check exclude admin pages.
+  $admin_page_match = FALSE;
+  if (!empty($popup_settings['exclude_admin_pages']) && path_is_admin(current_path())) {
+    $admin_page_match = TRUE;
+  }
+
   if (isset($popup_settings['eu_only']) && $popup_settings['eu_only']) {
     // Use the geoip function if exists.
     $country_code = function_exists('geoip_country_code_by_name') ? geoip_country_code_by_name(ip_address()) : '';
@@ -74,7 +80,7 @@ function eu_cookie_compliance_page_build(&$page) {
     $geoip_match = TRUE;
   }
 
-  if (!empty($popup_settings['popup_enabled']) && user_access('display EU Cookie Compliance popup') && $geoip_match && $domain_allow && !$path_match) {
+  if (!empty($popup_settings['popup_enabled']) && user_access('display EU Cookie Compliance popup') && $geoip_match && $domain_allow && !$path_match && !$admin_page_match) {
     global $language;
     // Array storage for caching full client data.
     $data = array();
