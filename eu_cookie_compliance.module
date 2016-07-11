@@ -25,6 +25,15 @@ function eu_cookie_compliance_menu() {
 }
 
 /**
+ * Implements hook_page_alter().
+ */
+function eu_cookie_compliance_page_alter(&$page) {
+  if ($page['#theme'] == 'panels_everywhere_page') {
+    eu_cookie_compliance_page_build($page);
+  }
+}
+
+/**
  * Implements hook_page_build().
  */
 function eu_cookie_compliance_page_build(&$page) {
