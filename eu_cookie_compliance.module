@@ -13,14 +13,30 @@
  * Implements hook_menu().
  */
 function eu_cookie_compliance_menu() {
+  $default_language = language_default('language');
+
   $items['admin/config/system/eu-cookie-compliance'] = array(
     'title' => 'EU Cookie Compliance',
     'description' => 'Make your web site compliant with the EU Directive on Privacy and Electronic Communications.',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('eu_cookie_compliance_admin_form'),
+    'page arguments' => array('eu_cookie_compliance_admin_form', $default_language),
     'access arguments' => array('administer EU Cookie Compliance popup'),
     'file' => 'eu_cookie_compliance.admin.inc',
   );
+  foreach(language_list() as $key => $language) {
+    if (!empty($language->enabled)) {
+      $items['admin/config/system/eu-cookie-compliance/' . $language->language] = array(
+        'title' => $language->name,
+        'description' => 'Make your website compliant with the EU Directive on Privacy and Electronic Communications.',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('eu_cookie_compliance_admin_form', $language->language),
+        'access arguments' => array('administer EU Cookie Compliance popup'),
+        'file' => 'eu_cookie_compliance.admin.inc',
+        'type' => MENU_LOCAL_TASK,
+      );
+    }
+  }
+
   return $items;
 }
 
@@ -42,7 +58,7 @@ function eu_cookie_compliance_page_build(&$page) {
   // Check Add/Remove domains
   $domain_allow = TRUE;
   $domain_option = isset($popup_settings['domains_option']) ? $popup_settings['domains_option'] : 1;
-  if (isset($popup_settings['domains_list'])) {
+  if (!empty($popup_settings['domains_list'])) {
     global $base_url;
     $domains_list = str_replace(array("\r\n", "\r"), "\n", $popup_settings['domains_list']);
     $domains_list = explode("\n", $domains_list);
@@ -127,11 +143,13 @@ function eu_cookie_compliance_page_build(&$page) {
         $html_agreed = preg_replace('/<!--(.|\s)*?-->/', '', $html_agreed);
       }
       $clicking_confirmation = (isset($popup_settings['popup_clicking_confirmation'])) ? $popup_settings['popup_clicking_confirmation'] : TRUE;
+      $scrolling_confirmation = (isset($popup_settings['popup_scrolling_confirmation']))? $popup_settings['popup_scrolling_confirmation'] : TRUE ;
       $data['variables'] = array(
         'popup_enabled' => $popup_settings['popup_enabled'],
         'popup_agreed_enabled' => $popup_settings['popup_agreed_enabled'],
         'popup_hide_agreed' => isset($popup_settings['popup_hide_agreed']) ? $popup_settings['popup_hide_agreed'] : FALSE,
         'popup_clicking_confirmation' => $clicking_confirmation,
+        'popup_scrolling_confirmation' => $scrolling_confirmation,
         'popup_html_info' => empty($html_info) ? FALSE : $html_info,
         'popup_html_agreed' => empty($html_agreed) ? FALSE : $html_agreed,
         'popup_height' => ($popup_settings['popup_height'] !== '') ? (int) $popup_settings['popup_height'] : 'auto',
@@ -205,9 +223,13 @@ function eu_cookie_compliance_theme() {
  * @return string
  *   if no settings defined return NULL
  */
-function eu_cookie_compliance_get_settings($setting = 'all') {
+function eu_cookie_compliance_get_settings($ln = FALSE, $setting = 'all') {
   global $language;
-  $popup_settings = variable_get('eu_cookie_compliance_' . $language->language, array());
+  if (empty($ln)) {
+    $ln = $language->language;
+  }
+  $popup_settings = variable_get('eu_cookie_compliance_' . $ln, array());
+
 
   if ($setting == 'all') {
     return $popup_settings;

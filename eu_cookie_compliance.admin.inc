@@ -7,14 +7,22 @@
 /**
  * Provides form for cookie control popup.
  */
-function eu_cookie_compliance_admin_form($form_state) {
+function eu_cookie_compliance_admin_form($form, $form_state) {
   global $language;
 
-  $ln = $language->language;
-  $language_description = '';
-  $popup_settings = eu_cookie_compliance_get_settings();
-
   $form = array();
+
+  $form_language = $language;
+  $ln = $form_language->language;
+
+  if (isset($form_state['build_info']['args'][0]) && $ln = $form_state['build_info']['args'][0]) {
+    $languages = language_list();
+    $form_language = (!empty($languages[$ln]) ? $languages[$ln] : $form_language);
+  }
+
+  $form['#language'] = $form_language;
+
+  $popup_settings = eu_cookie_compliance_get_settings($ln);
 
   $form['eu_cookie_compliance_' . $ln] = array(
     '#type' => 'item',
@@ -22,7 +30,7 @@ function eu_cookie_compliance_admin_form($form_state) {
   );
 
   if (module_exists('locale')) {
-    $language_description = t('(%language language)', array('%language' => $language->name));
+    $form['eu_cookie_compliance_' . $ln]['#title'] = t('You are editing settings for the %language language.', array('%language' => $form_language->name));
   }
 
   $form['eu_cookie_compliance_' . $ln]['popup_enabled'] = array(
@@ -33,7 +41,7 @@ function eu_cookie_compliance_admin_form($form_state) {
 
   $form['popup_message'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Popup Message %description', array('%description' => $language_description)),
+    '#title' => t('Popup Message'),
     '#collapsible' => TRUE,
     '#collapsed' => FALSE,
   );
@@ -78,7 +86,7 @@ function eu_cookie_compliance_admin_form($form_state) {
     '#type' => 'fieldset',
     '#collapsible' => TRUE,
     '#collapsed' => FALSE,
-    '#title' => t('Thank You Message %description', array('%description' => $language_description)),
+    '#title' => t('Thank You Message'),
   );
 
   $form['thank_you']['eu_cookie_compliance_' . $ln] = array(
@@ -127,7 +135,7 @@ function eu_cookie_compliance_admin_form($form_state) {
     '#type' => 'fieldset',
     '#collapsible' => TRUE,
     '#collapsed' => FALSE,
-    '#title' => t('Privacy Policy %description', array('%description' => $language_description)),
+    '#title' => t('Privacy Policy'),
   );
 
   $form['privacy']['eu_cookie_compliance_' . $ln] = array(
@@ -250,6 +258,13 @@ function eu_cookie_compliance_admin_form($form_state) {
     '#required' => TRUE,
   );
 
+  $form['advanced']['eu_cookie_compliance_' . $ln]['popup_scrolling_confirmation'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Consent by scrolling'),
+    '#default_value' => isset($popup_settings['popup_scrolling_confirmation']) ? $popup_settings['popup_scrolling_confirmation'] : 0,
+    '#description' => t("Scrolling makes the visitors to accept the cookie policy. In some contries, like Itay, it is permitted."),
+  );
+
   $form['advanced']['eu_cookie_compliance_domain'] = array(
     '#type' => 'textfield',
     '#title' => t('Domain'),
@@ -303,8 +318,9 @@ function eu_cookie_compliance_admin_form($form_state) {
  * Validates form for cookie control popup.
  */
 function eu_cookie_compliance_admin_form_validate($form, &$form_state) {
-  global $language;
-  $ln = $language->language;
+  $form_language = $form['#language'];
+
+  $ln = $form_language->language;
   if (!preg_match('/^[1-9][0-9]{0,4}$/', $form_state['values']['eu_cookie_compliance_' . $ln]['popup_height']) && !empty($form_state['values']['eu_cookie_compliance_' . $ln]['popup_height'])) {
     form_set_error('eu_cookie_compliance_' . $ln . '][popup_height', t('Height must be an integer value .'));
   }
@@ -323,7 +339,7 @@ function eu_cookie_compliance_admin_form_validate($form, &$form_state) {
     form_set_error('eu_cookie_compliance_' . $ln . '][popup_link', t('Looks like your privacy policy link contains fragment #, you should make this an absolute url eg @link', array('@link' => $popup_link)));
   }
 
-  cache_clear_all('eu_cookie_compliance_client_settings_' . $language->language, 'cache');
+  cache_clear_all('eu_cookie_compliance_client_settings_' . $ln, 'cache');
 }
 
 /**
