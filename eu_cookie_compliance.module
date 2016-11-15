@@ -55,6 +55,7 @@ function eu_cookie_compliance_page_alter(&$page) {
 function eu_cookie_compliance_page_build(&$page) {
   $popup_settings = eu_cookie_compliance_get_settings();
   global $theme;
+
   // Check Add/Remove domains
   $domain_allow = TRUE;
   $domain_option = isset($popup_settings['domains_option']) ? $popup_settings['domains_option'] : 1;
@@ -70,6 +71,7 @@ function eu_cookie_compliance_page_build(&$page) {
       $domain_allow = FALSE;
     }
   }
+
   // Check exclude paths.
   $path_match = FALSE;
   if (isset($popup_settings['exclude_paths'])) {
@@ -108,8 +110,9 @@ function eu_cookie_compliance_page_build(&$page) {
   if (!empty($popup_settings['popup_enabled']) && user_access('display EU Cookie Compliance popup') && $geoip_match && $domain_allow && !$path_match && !$admin_page_match) {
     global $language;
     // Array storage for caching full client data.
+    $cid = 'eu_cookie_compliance_client_settings:' . $language->language . ':' . $theme;
     $data = array();
-    if($cache = cache_get('eu_cookie_compliance_client_settings_' . $theme . '_' . $language->language, 'cache')) {
+    if($cache = cache_get($cid, 'cache')) {
       $data = $cache->data;
     }
     else {
@@ -162,7 +165,7 @@ function eu_cookie_compliance_page_build(&$page) {
         'domain' => variable_get('eu_cookie_compliance_domain', ''),
         'cookie_lifetime' => variable_get('eu_cookie_compliance_cookie_lifetime', 100),
       );
-      cache_set('eu_cookie_compliance_client_settings_' . $theme . '_' . $language->language, $data, 'cache', CACHE_TEMPORARY);
+      cache_set($cid, $data, 'cache', CACHE_PERMANENT);
     }
     drupal_add_css($data['css'], array('type' => 'inline'));
     drupal_add_js(array('eu_cookie_compliance' => $data['variables']), array('type' => 'setting', 'scope' => 'footer'));

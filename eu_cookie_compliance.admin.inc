@@ -24,6 +24,11 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
 
   $popup_settings = eu_cookie_compliance_get_settings($ln);
 
+  $default_filter_format = filter_default_format();
+  if ($default_filter_format == 'filtered_html') {
+    $default_filter_format = 'full_html';
+  }
+
   $form['eu_cookie_compliance_' . $ln] = array(
     '#type' => 'item',
     '#tree' => TRUE,
@@ -63,12 +68,12 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     '#title' => t('Popup message - requests consent'),
     '#default_value' => isset($popup_settings['popup_info']['value']) ? $popup_settings['popup_info']['value'] : '',
     '#required' => TRUE,
-    '#format' => isset($popup_settings['popup_info']['format']) ? $popup_settings['popup_info']['format'] : filter_default_format(),
+    '#format' => isset($popup_settings['popup_info']['format']) ? $popup_settings['popup_info']['format'] : $default_filter_format,
   );
 
   $form['popup_message']['eu_cookie_compliance_' . $ln]['popup_agree_button_message'] = array(
     '#type' => 'textfield',
-    '#title' => t('Agree button message'),
+    '#title' => t('Agree button label'),
     '#default_value' => isset($popup_settings['popup_agree_button_message']) ? $popup_settings['popup_agree_button_message'] : t('OK, I agree'),
     '#size' => 30,
     '#required' => TRUE,
@@ -76,7 +81,7 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
 
   $form['popup_message']['eu_cookie_compliance_' . $ln]['popup_disagree_button_message'] = array(
     '#type' => 'textfield',
-    '#title' => t('Disagree button message'),
+    '#title' => t('Disagree button label'),
     '#default_value' => isset($popup_settings['popup_disagree_button_message']) ? $popup_settings['popup_disagree_button_message'] : t('No, give me more info'),
     '#size' => 30,
     '#required' => TRUE,
@@ -102,22 +107,22 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
 
   $form['thank_you']['eu_cookie_compliance_' . $ln]['popup_hide_agreed'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Clicking hides thank you message'),
+    '#title' => t('Clicking hides “Thank you” message'),
     '#default_value' => isset($popup_settings['popup_hide_agreed']) ? $popup_settings['popup_hide_agreed'] : 0,
     '#description' => t('Clicking a link hides the thank you message automatically.'),
   );
 
   $form['thank_you']['eu_cookie_compliance_' . $ln]['popup_agreed'] = array(
     '#type' => 'text_format',
-    '#title' => t('Popup message - thanks for giving consent'),
+    '#title' => t('Popup message - thank you for giving consent'),
     '#default_value' => isset($popup_settings['popup_agreed']['value']) ? $popup_settings['popup_agreed']['value'] : '',
     '#required' => TRUE,
-    '#format' => isset($popup_settings['popup_agreed']['format']) ? $popup_settings['popup_agreed']['format'] : filter_default_format(),
+    '#format' => isset($popup_settings['popup_agreed']['format']) ? $popup_settings['popup_agreed']['format'] : $default_filter_format,
   );
 
   $form['thank_you']['eu_cookie_compliance_' . $ln]['popup_find_more_button_message'] = array(
     '#type' => 'textfield',
-    '#title' => t('More info button message'),
+    '#title' => t('More info button label'),
     '#default_value' => isset($popup_settings['popup_find_more_button_message']) ? $popup_settings['popup_find_more_button_message'] : t('More info'),
     '#size' => 30,
     '#required' => TRUE,
@@ -125,7 +130,7 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
 
   $form['thank_you']['eu_cookie_compliance_' . $ln]['popup_hide_button_message'] = array(
     '#type' => 'textfield',
-    '#title' => t('Hide button message'),
+    '#title' => t('Hide button label'),
     '#default_value' => isset($popup_settings['popup_hide_button_message']) ? $popup_settings['popup_hide_button_message'] : t('Hide'),
     '#size' => 30,
     '#required' => TRUE,
@@ -169,13 +174,6 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
   $form['appearance']['eu_cookie_compliance_' . $ln] = array(
     '#type' => 'item',
     '#tree' => TRUE,
-  );
-
-  $form['appearance']['eu_cookie_compliance_' . $ln]['popup_position'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Place the pop-up at the top of the website'),
-    '#default_value' => isset($popup_settings['popup_position']) ? $popup_settings['popup_position'] : 0,
-    '#description' => t('By default the pop-up appears at the bottom of the website. Tick this box if you want it to appear at the top'),
   );
 
   $form_color_picker_type = 'textfield';
@@ -339,7 +337,7 @@ function eu_cookie_compliance_admin_form_validate($form, &$form_state) {
     form_set_error('eu_cookie_compliance_' . $ln . '][popup_link', t('Looks like your privacy policy link contains fragment #, you should make this an absolute url eg @link', array('@link' => $popup_link)));
   }
 
-  cache_clear_all('eu_cookie_compliance_client_settings_' . $ln, 'cache');
+  cache_clear_all('eu_cookie_compliance_client_settings:' . $ln, 'cache', TRUE);
 }
 
 /**

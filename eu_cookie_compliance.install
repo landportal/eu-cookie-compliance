@@ -11,14 +11,19 @@
 function eu_cookie_compliance_install() {
   global $language;
 
+  $default_filter_format = filter_default_format();
+  if ($default_filter_format == 'filtered_html') {
+    $default_filter_format = 'full_html';
+  }
+
   $popup_settings = array(
     'popup_info' => array(
       'value' => '<h2>We use cookies on this site to enhance your user experience</h2><p>By clicking any link on this page you are giving your consent for us to set cookies.</p>',
-      'format' => filter_default_format(),
+      'format' => $default_filter_format,
     ),
     'popup_agreed' => array(
       'value' => '<h2>Thank you for accepting cookies</h2><p>You can now hide this message or find out more about cookies.</p>',
-      'format' => filter_default_format(),
+      'format' => $default_filter_format,
     ),
   );
   $lang = ($language->language) ? $language->language : 'en';
