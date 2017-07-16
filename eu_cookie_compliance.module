@@ -218,21 +218,23 @@ function eu_cookie_compliance_theme() {
 /**
  * Retrieves settings from the database for a current language.
  *
- * @param string $setting
+ * @param string|boolean $current_language
  *   Language to retrieve settings.
+ *
+ * @param string $setting
+ *   Setting to retrieve.
  *
  * @global object $language
  *
- * @return string
+ * @return string|null|array
  *   if no settings defined return NULL
  */
-function eu_cookie_compliance_get_settings($ln = FALSE, $setting = 'all') {
+function eu_cookie_compliance_get_settings($current_language = FALSE, $setting = 'all') {
   global $language;
-  if (empty($ln)) {
-    $ln = $language->language;
+  if (empty($current_language)) {
+    $current_language = $language->language;
   }
-  $popup_settings = variable_get('eu_cookie_compliance_' . $ln, array());
-
+  $popup_settings = variable_get('eu_cookie_compliance_' . $current_language, array());
 
   if ($setting == 'all') {
     return $popup_settings;

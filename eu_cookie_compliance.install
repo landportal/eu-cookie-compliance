@@ -26,8 +26,8 @@ function eu_cookie_compliance_install() {
       'format' => $default_filter_format,
     ),
   );
-  $lang = ($language->language) ? $language->language : 'en';
-  variable_set('eu_cookie_compliance_' . $lang, $popup_settings);
+  $current_language = ($language->language) ? $language->language : 'en';
+  variable_set('eu_cookie_compliance_' . $current_language, $popup_settings);
 }
 
 /**
@@ -37,14 +37,14 @@ function eu_cookie_compliance_uninstall() {
   global $language;
 
   if (module_exists('locale')) {
-    $langs = locale_language_list();
-    foreach ($langs as $key => $lang) {
+    $languages = locale_language_list();
+    foreach ($languages as $key => $current_language) {
       variable_del('eu_cookie_compliance_' . $key);
     }
   }
   else {
-    $lang = ($language->language) ? $language->language : 'en';
-    variable_del('eu_cookie_compliance_' . $lang);
+    $current_language = ($language->language) ? $language->language : 'en';
+    variable_del('eu_cookie_compliance_' . $current_language);
   }
   cache_clear_all('variables', 'cache');
 }
@@ -55,8 +55,8 @@ function eu_cookie_compliance_uninstall() {
 function eu_cookie_compliance_update_7000(&$sandbox = NULL) {
   global $language;
   if (module_exists('locale')) {
-    $langs = locale_language_list();
-    foreach ($langs as $key => $lang) {
+    $languages = locale_language_list();
+    foreach ($languages as $key => $current_language) {
       $eu_cookie_settings = variable_get('eu_cookie_compliance_' . $key, array());
       if (!empty($eu_cookie_settings['popup_delay'])) {
         $eu_cookie_settings['popup_delay'] *= 1000;
@@ -65,11 +65,11 @@ function eu_cookie_compliance_update_7000(&$sandbox = NULL) {
     }
   }
   else {
-    $lang = ($language->language) ? $language->language : 'en';
-    $eu_cookie_settings = variable_get('eu_cookie_compliance_' . $lang, array());
+    $current_language = ($language->language) ? $language->language : 'en';
+    $eu_cookie_settings = variable_get('eu_cookie_compliance_' . $current_language, array());
     if (!empty($eu_cookie_settings['popup_delay'])) {
       $eu_cookie_settings['popup_delay'] *= 1000;
-      variable_set('eu_cookie_compliance_' . $lang, $eu_cookie_settings);
+      variable_set('eu_cookie_compliance_' . $current_language, $eu_cookie_settings);
     }
   }
 }

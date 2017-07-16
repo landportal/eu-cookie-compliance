@@ -6,6 +6,11 @@
 
 /**
  * Provides form for cookie control popup.
+ *
+ * @param array $form
+ * @param array $form_state
+ *
+ * @return mixed
  */
 function eu_cookie_compliance_admin_form($form, $form_state) {
   global $language;
@@ -249,7 +254,7 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
 
   $form['advanced']['eu_cookie_compliance_' . $ln]['popup_delay'] = array(
     '#type' => 'textfield',
-    '#title' => t('Popup time delay in miliseconds'),
+    '#title' => t('Popup time delay in milliseconds'),
     '#default_value' => isset($popup_settings['popup_delay']) ? $popup_settings['popup_delay'] : 1000,
     '#size' => 5,
     '#maxlength' => 5,
@@ -260,7 +265,7 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     '#type' => 'checkbox',
     '#title' => t('Consent by scrolling'),
     '#default_value' => isset($popup_settings['popup_scrolling_confirmation']) ? $popup_settings['popup_scrolling_confirmation'] : 0,
-    '#description' => t("Scrolling makes the visitors to accept the cookie policy. In some contries, like Itay, it is permitted."),
+    '#description' => t("Scrolling makes the visitors to accept the cookie policy. In some countries, like Italy, it is permitted."),
   );
 
   $form['advanced']['eu_cookie_compliance_domain'] = array(
@@ -314,6 +319,9 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
 
 /**
  * Validates form for cookie control popup.
+ *
+ * @param array $form
+ * @param array $form_state
  */
 function eu_cookie_compliance_admin_form_validate($form, &$form_state) {
   $form_language = $form['#language'];
@@ -342,6 +350,9 @@ function eu_cookie_compliance_admin_form_validate($form, &$form_state) {
 
 /**
  * Validate field for a HEX value if a value is set.
+ *
+ * @param array $element
+ * @param array $form_state
  */
 function eu_cookie_compliance_validate_hex($element, &$form_state) {
   if (!empty($element['#value']) && !preg_match('/^[0-9a-fA-F]{3,6}$/', $element['#value'])) {
