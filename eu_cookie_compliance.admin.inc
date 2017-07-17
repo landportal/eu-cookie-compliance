@@ -261,6 +261,12 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     '#required' => TRUE,
   );
 
+  $form['advanced']['eu_cookie_compliance_' . $ln]['disagree_do_not_show_popup'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Do not show popup after user clicks on "Disagree" button.'),
+    '#default_value' => isset($popup_settings['disagree_do_not_show_popup']) ? $popup_settings['disagree_do_not_show_popup'] : 0,
+  );
+
   $form['advanced']['eu_cookie_compliance_' . $ln]['popup_scrolling_confirmation'] = array(
     '#type' => 'checkbox',
     '#title' => t('Consent by scrolling'),

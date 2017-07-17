@@ -50,7 +50,9 @@
               Drupal.eu_cookie_compliance.changeStatus(next_status);
             });
 
-            Drupal.eu_cookie_compliance.createPopup(Drupal.settings.eu_cookie_compliance.popup_html_info);
+            if (!Drupal.settings.eu_cookie_compliance.disagree_do_not_show_popup || status == '') {
+              Drupal.eu_cookie_compliance.createPopup(Drupal.settings.eu_cookie_compliance.popup_html_info);
+            }
           } else if (status === 1) {
             Drupal.eu_cookie_compliance.createPopup(Drupal.settings.eu_cookie_compliance.popup_html_agreed);
             if (popup_hide_agreed) {
@@ -97,6 +99,10 @@
     var clickingConfirms = Drupal.settings.eu_cookie_compliance.popup_clicking_confirmation;
     var agreedEnabled = Drupal.settings.eu_cookie_compliance.popup_agreed_enabled;
     $('.find-more-button').click(function() {
+      if (Drupal.settings.eu_cookie_compliance.disagree_do_not_show_popup) {
+        Drupal.eu_cookie_compliance.setStatus(0);
+        $("#sliding-popup").remove();
+      }
       if (Drupal.settings.eu_cookie_compliance.popup_link_new_window) {
         window.open(Drupal.settings.eu_cookie_compliance.popup_link);
       }
