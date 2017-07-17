@@ -23,7 +23,7 @@
           if (status === 0 || status === null) {
             var nextStatus = 1;
             if (clickingConfirms) {
-              $('a, input[type=submit]').bind('click.euCookieCompliance', function() {
+              $('a, input[type=submit], button[type=submit]').bind('click.euCookieCompliance', function() {
                 if (!agreedEnabled) {
                   Drupal.eu_cookie_compliance.setStatus(1);
                   nextStatus = 2;
@@ -56,7 +56,7 @@
           } else if (status === 1) {
             Drupal.eu_cookie_compliance.createPopup(Drupal.settings.eu_cookie_compliance.popup_html_agreed);
             if (popupHideAgreed) {
-              $('a, input[type=submit]').bind('click.euCookieComplianceHideAgreed', function() {
+              $('a, input[type=submit], button[type=submit]').bind('click.euCookieComplianceHideAgreed', function() {
                 Drupal.eu_cookie_compliance.changeStatus(2);
               });
             }
@@ -117,7 +117,7 @@
         nextStatus = 2;
       }
       if (clickingConfirms) {
-        $('a, input[type=submit]').unbind('click.euCookieCompliance');
+        $('a, input[type=submit], button[type=submit]').unbind('click.euCookieCompliance');
       }
       Drupal.eu_cookie_compliance.changeStatus(nextStatus);
     });
