@@ -118,22 +118,24 @@ function eu_cookie_compliance_page_build(&$page) {
     else {
       // Initialize some needed popup settings messages.
       $popup_settings_messages = array(
-        'popup_agree_button_message',
-        'popup_disagree_button_message',
-        'popup_hide_button_message',
-        'popup_find_more_button_message',
+        'popup_agree_button_message' => t('OK, I agree'),
+        'popup_disagree_button_message' => t('No, give me more info'),
+        'popup_hide_button_message' => t('Hide'),
+        'popup_find_more_button_message' => t('More info'),
       );
-      foreach ($popup_settings_messages as $key) {
+      foreach ($popup_settings_messages as $key => $value) {
         if (!isset($popup_settings[$key])) {
-          $popup_settings[$key] = '';
+          $popup_settings[$key] = $value;
         }
       }
       // Color overrides.
       $data['css'] = '';
-      if ($popup_settings['popup_bg_hex'] != '' and $popup_settings['popup_text_hex'] != '') {
-        $position = $popup_settings['popup_position'] ? 'top' : 'bottom';
-        $data['css'] = '#sliding-popup.sliding-popup-' . $position . ' {background:#' . check_plain($popup_settings["popup_bg_hex"]) . ';}'
-             . '#sliding-popup .popup-content #popup-text h2, #sliding-popup .popup-content #popup-text p {color:#' . check_plain($popup_settings['popup_text_hex']) . ' !important;}';
+      $position = $popup_settings['popup_position'] ? 'top' : 'bottom';
+      if ($popup_settings['popup_bg_hex'] != '') {
+        $data['css'] = '#sliding-popup.sliding-popup-' . $position . ' {background:#' . check_plain($popup_settings["popup_bg_hex"]) . ';}';
+      }
+      if ($popup_settings['popup_text_hex'] != '') {
+        $data['css'] .= '#sliding-popup .popup-content #popup-text h1, #sliding-popup .popup-content #popup-text h2, #sliding-popup .popup-content #popup-text h3, #sliding-popup .popup-content #popup-text p {color:#' . check_plain($popup_settings['popup_text_hex']) . ' !important;}';
       }
       $popup_text_info = str_replace(array("\r", "\n"), '', $popup_settings['popup_info']['value']);
       $popup_text_agreed = str_replace(array("\r", "\n"), '', $popup_settings['popup_agreed']['value']);

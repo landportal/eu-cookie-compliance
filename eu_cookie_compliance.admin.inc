@@ -348,7 +348,7 @@ function eu_cookie_compliance_admin_form_validate($form, &$form_state) {
   if ((strpos($popup_link, '#') !== FALSE) && (strpos($popup_link, 'http') === FALSE)) {
     $fragment = explode('#', $popup_link);
     $popup_link = url($fragment[0], array('fragment' => $fragment[1], 'absolute' => TRUE));
-    form_set_error('eu_cookie_compliance_' . $ln . '][popup_link', t('Looks like your privacy policy link contains fragment #, you should make this an absolute url eg @link', array('@link' => $popup_link)));
+    form_set_error('eu_cookie_compliance_' . $ln . '][popup_link', t('Looks like your privacy policy link contains a fragment #. You should make this an absolute url, e.g. @link', array('@link' => $popup_link)));
   }
 
   cache_clear_all('eu_cookie_compliance_client_settings:' . $ln, 'cache', TRUE);
