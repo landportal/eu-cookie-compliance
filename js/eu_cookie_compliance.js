@@ -167,8 +167,15 @@
   Drupal.eu_cookie_compliance.setStatus = function(status) {
     var date = new Date();
     var domain = Drupal.settings.eu_cookie_compliance.domain ? Drupal.settings.eu_cookie_compliance.domain : '';
+    var path = Drupal.settings.basePath;
+    if(path.length > 1) {
+      var pathEnd = path.length - 1;
+      if (path.lastIndexOf('/') === pathEnd) {
+        path = path.substring(0, pathEnd);
+      }
+    }
     date.setDate(date.getDate() + parseInt(Drupal.settings.eu_cookie_compliance.cookie_lifetime));
-    $.cookie('cookie-agreed', status, date.toUTCString(), Drupal.settings.basePath, domain);
+    $.cookie('cookie-agreed', status, date.toUTCString(), path, domain);
   };
 
   Drupal.eu_cookie_compliance.hasAgreed = function() {
