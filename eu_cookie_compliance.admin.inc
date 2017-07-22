@@ -43,6 +43,10 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     $form['eu_cookie_compliance_' . $ln]['#title'] = t('You are editing settings for the %language language.', array('%language' => $form_language->name));
   }
 
+  $form['eu_cookie_compliance_' . $ln]['info'] = array(
+    '#markup' => t('<p><strong>Note:</strong> <ul><li>The permission "Display EU Cookie Compliance popup" needs to be enabled for Anonymous and Authenticated users in order for the banner to appear.</li><li>In order for the module to work, <code>$scripts</code> needs to be output before <code>$page_bottom</code> in your <code>html.tpl.php</code>.</li></ul></p>'),
+  );
+
   $form['eu_cookie_compliance_' . $ln]['popup_enabled'] = array(
     '#type' => 'checkbox',
     '#title' => t('Enable popup'),
