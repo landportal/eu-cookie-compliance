@@ -13,8 +13,6 @@
  * Implements hook_menu().
  */
 function eu_cookie_compliance_menu() {
-  $default_language = language_default('language');
-
   $items['admin/config/system/eu-cookie-compliance'] = array(
     'title' => 'EU Cookie Compliance',
     'description' => 'Make your web site compliant with the EU Directive on Privacy and Electronic Communications.',
@@ -23,19 +21,6 @@ function eu_cookie_compliance_menu() {
     'access arguments' => array('administer EU Cookie Compliance popup'),
     'file' => 'eu_cookie_compliance.admin.inc',
   );
-  foreach(language_list() as $key => $language) {
-    if (!empty($language->enabled)) {
-      $items['admin/config/system/eu-cookie-compliance/' . $language->language] = array(
-        'title' => $language->name,
-        'description' => 'Make your website compliant with the EU Directive on Privacy and Electronic Communications.',
-        'page callback' => 'drupal_get_form',
-        'page arguments' => array('eu_cookie_compliance_admin_form', $language->language),
-        'access arguments' => array('administer EU Cookie Compliance popup'),
-        'file' => 'eu_cookie_compliance.admin.inc',
-        'type' => MENU_LOCAL_TASK,
-      );
-    }
-  }
 
   return $items;
 }
@@ -232,12 +217,8 @@ function eu_cookie_compliance_theme() {
  * @return string|null|array
  *   if no settings defined return NULL
  */
-function eu_cookie_compliance_get_settings($current_language = FALSE, $setting = 'all') {
-  global $language;
-  if (empty($current_language)) {
-    $current_language = $language->language;
-  }
-  $popup_settings = variable_get('eu_cookie_compliance_' . $current_language, array());
+function eu_cookie_compliance_get_settings($setting = 'all') {
+  $popup_settings = variable_get('eu_cookie_compliance', array());
 
   if ($setting == 'all') {
     return $popup_settings;
