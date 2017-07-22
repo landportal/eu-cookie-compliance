@@ -340,7 +340,12 @@ function eu_cookie_compliance_admin_form_validate($form, &$form_state) {
   $themes = system_rebuild_theme_data();
   foreach ($themes as $theme) {
     if ($theme->status == 1) {
-      cache_clear_all('eu_cookie_compliance_client_settings:' . $ln . ':' . $theme->name, 'cache', TRUE);
+      $languages = locale_language_list();
+      foreach($languages as $language) {
+        if (!empty($language->enabled)) {
+          cache_clear_all('eu_cookie_compliance_client_settings:' . $language->language . ':' . $theme->name, 'cache', TRUE);
+        }
+      }
     }
   }
 }
