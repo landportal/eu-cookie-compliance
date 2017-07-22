@@ -175,6 +175,13 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     $form_color_picker_type = 'jquery_colorpicker';
   }
 
+  $form['appearance']['eu_cookie_compliance']['use_bare_css'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Include minimal CSS, I want to style the overlay in the theme CSS.'),
+    '#default_value' => isset($popup_settings['use_bare_css']) ? check_plain($popup_settings['use_bare_css']) : 0,
+    '#description' => t('This may be useful if you want the overlay to share the button style of your theme. Note that you will have to configure values like the overlay width, text color and background color in your CSS file.'),
+  );
+
   $form['appearance']['eu_cookie_compliance']['popup_text_hex'] = array(
     '#type' => $form_color_picker_type,
     '#title' => t('Text Color'),
@@ -209,7 +216,7 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     '#default_value' => isset($popup_settings['popup_width']) ? $popup_settings['popup_width'] : '100%',
     '#size' => 5,
     '#maxlength' => 5,
-    '#required' => TRUE,
+    '#required' => FALSE,
     '#description' => t('Set the width of the popup. This can be either an integer value or percentage of the screen width. For example: 200 or 50%'),
   );
 
@@ -308,6 +315,8 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     '#default_value' => isset($popup_settings['exclude_admin_pages']) ? $popup_settings['exclude_admin_pages'] : '',
   );
 
+  $form['#attached']['js'][] = drupal_get_path('module', 'eu_cookie_compliance'). '/js/eu_cookie_compliance.admin.js';
+
   return system_settings_form($form);
 }
 
@@ -318,14 +327,22 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
  * @param array $form_state
  */
 function eu_cookie_compliance_admin_form_validate($form, &$form_state) {
-  if (!preg_match('/^[1-9][0-9]{0,4}$/', $form_state['values']['eu_cookie_compliance']['popup_height']) && !empty($form_state['values']['eu_cookie_compliance']['popup_height'])) {
-    form_set_error('eu_cookie_compliance][popup_height', t('Height must be an integer value .'));
-  }
   if ((!preg_match('/^[1-9][0-9]{0,4}$/', $form_state['values']['eu_cookie_compliance']['popup_delay'])) && ($form_state['values']['eu_cookie_compliance']['popup_delay'] != "0")) {
     form_set_error('eu_cookie_compliance][popup_delay', t('Delay must be an integer value.'));
   }
-  if (!preg_match('/^[1-9][0-9]{0,4}\%?$/', $form_state['values']['eu_cookie_compliance']['popup_width'])) {
-    form_set_error('eu_cookie_compliance][popup_width', t('Width must be an integer or a percentage value.'));
+  if (empty($form_state['values']['eu_cookie_compliance']['use_bare_css'])) {
+    if (!preg_match('/^[1-9][0-9]{0,4}$/', $form_state['values']['eu_cookie_compliance']['popup_height']) && !empty($form_state['values']['eu_cookie_compliance']['popup_height'])) {
+      form_set_error('eu_cookie_compliance][popup_height', t('Height must be an integer value .'));
+    }
+    if (!preg_match('/^[1-9][0-9]{1,4}\%?$/', $form_state['values']['eu_cookie_compliance']['popup_width'])) {
+      form_set_error('eu_cookie_compliance][popup_width', t('Width must be an integer or a percentage value.'));
+    }
+  }
+  else {
+    $form_state['values']['eu_cookie_compliance']['popup_width'] = '';
+    $form_state['values']['eu_cookie_compliance']['popup_height'] = '';
+    $form_state['values']['eu_cookie_compliance']['popup_bg_hex'] = '';
+    $form_state['values']['eu_cookie_compliance']['popup_text_hex'] = '';
   }
   $popup_link = $form_state['values']['eu_cookie_compliance']['popup_link'];
   // If the link contains a fragment then check if it validates then rewrite
@@ -341,10 +358,8 @@ function eu_cookie_compliance_admin_form_validate($form, &$form_state) {
   foreach ($themes as $theme) {
     if ($theme->status == 1) {
       $languages = locale_language_list();
-      foreach($languages as $language) {
-        if (!empty($language->enabled)) {
-          cache_clear_all('eu_cookie_compliance_client_settings:' . $language->language . ':' . $theme->name, 'cache', TRUE);
-        }
+      foreach($languages as $key => $language) {
+        cache_clear_all('eu_cookie_compliance_client_settings:' . $key . ':' . $theme->name, 'cache', TRUE);
       }
     }
   }

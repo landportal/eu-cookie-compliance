@@ -1,4 +1,4 @@
-(function ($, Drupal) {
+(function ($) {
   'use strict';
 
   Drupal.behaviors.eu_cookie_compliance_popup = {
@@ -32,23 +32,24 @@
   Drupal.eu_cookie_compliance = {};
 
   Drupal.eu_cookie_compliance.createPopup = function(html) {
-    var popup = $(html)
-      .attr('id', 'sliding-popup')
-      .height(Drupal.settings.eu_cookie_compliance.popup_height)
-      .width(Drupal.settings.eu_cookie_compliance.popup_width)
-      .hide();
+    var $popup = $(html).attr('id', 'sliding-popup');
+    if (!Drupal.settings.eu_cookie_compliance.popup_use_bare_css) {
+      $popup.height(Drupal.settings.eu_cookie_compliance.popup_height)
+          .width(Drupal.settings.eu_cookie_compliance.popup_width);
+    }
+    $popup.hide();
     var height = 0;
     if (Drupal.settings.eu_cookie_compliance.popup_position) {
-      popup.prependTo('body');
-      height = popup.height();
-      popup.show()
+      $popup.prependTo('body');
+      height = $popup.height();
+      $popup.show()
         .attr('class', 'sliding-popup-top clearfix')
         .css('top', -1 * height)
         .animate({top: 0}, Drupal.settings.eu_cookie_compliance.popup_delay);
     } else {
-      popup.appendTo('body');
-      height = popup.height();
-      popup.show()
+      $popup.appendTo('body');
+      height = $popup.height();
+      $popup.show()
         .attr('class', 'sliding-popup-bottom')
         .css('bottom', -1 * height)
         .animate({bottom: 0}, Drupal.settings.eu_cookie_compliance.popup_delay);
@@ -69,8 +70,7 @@
       $(window).bind('scroll', Drupal.eu_cookie_compliance.acceptAction);
     }
 
-    $('.find-more-button').not('.find-more-button-processed').click(Drupal.eu_cookie_compliance.moreInfoAction);
-    $('.find-more-button').addClass('.find-more-button-processed');
+    $('.find-more-button').not('.find-more-button-processed').addClass('find-more-button-processed').click(Drupal.eu_cookie_compliance.moreInfoAction);
   };
 
   Drupal.eu_cookie_compliance.attachHideEvents = function() {
@@ -87,8 +87,7 @@
         Drupal.eu_cookie_compliance.changeStatus(2);
       });
     }
-    $('.find-more-button').not('.find-more-button-processed').click(Drupal.eu_cookie_compliance.moreInfoAction);
-    $('.find-more-button').addClass('.find-more-button-processed');
+    $('.find-more-button').not('.find-more-button-processed').addClass('find-more-button-processed').click(Drupal.eu_cookie_compliance.moreInfoAction);
   };
 
   Drupal.eu_cookie_compliance.acceptAction = function () {
@@ -112,7 +111,7 @@
     else {
       window.location.href = Drupal.settings.eu_cookie_compliance.popup_link;
     }
-  }
+  };
 
   Drupal.eu_cookie_compliance.getCurrentStatus = function() {
     var value = $.cookie('cookie-agreed');
@@ -180,4 +179,4 @@
     return cookieEnabled;
   };
 
-})(jQuery, Drupal);
+})(jQuery);

@@ -116,11 +116,13 @@ function eu_cookie_compliance_page_build(&$page) {
       // Color overrides.
       $data['css'] = '';
       $position = $popup_settings['popup_position'] ? 'top' : 'bottom';
-      if ($popup_settings['popup_bg_hex'] != '') {
-        $data['css'] = '#sliding-popup.sliding-popup-' . $position . ' {background:#' . check_plain($popup_settings["popup_bg_hex"]) . ';}';
-      }
-      if ($popup_settings['popup_text_hex'] != '') {
-        $data['css'] .= '#sliding-popup .popup-content #popup-text h1, #sliding-popup .popup-content #popup-text h2, #sliding-popup .popup-content #popup-text h3, #sliding-popup .popup-content #popup-text p {color:#' . check_plain($popup_settings['popup_text_hex']) . ' !important;}';
+      if (empty($popup_settings['use_bare_css'])) {
+        if ($popup_settings['popup_bg_hex'] != '') {
+          $data['css'] = '#sliding-popup.sliding-popup-' . $position . ' {background:#' . check_plain($popup_settings["popup_bg_hex"]) . ';}';
+        }
+        if ($popup_settings['popup_text_hex'] != '') {
+          $data['css'] .= '#sliding-popup .popup-content #popup-text h1, #sliding-popup .popup-content #popup-text h2, #sliding-popup .popup-content #popup-text h3, #sliding-popup .popup-content #popup-text p {color:#' . check_plain($popup_settings['popup_text_hex']) . ' !important;}';
+        }
       }
       $popup_text_info = str_replace(array("\r", "\n"), '', $popup_settings['popup_info']['value']);
       $popup_text_agreed = str_replace(array("\r", "\n"), '', $popup_settings['popup_agreed']['value']);
@@ -142,6 +144,7 @@ function eu_cookie_compliance_page_build(&$page) {
         'popup_scrolling_confirmation' => $scrolling_confirmation,
         'popup_html_info' => empty($html_info) ? FALSE : $html_info,
         'popup_html_agreed' => empty($html_agreed) ? FALSE : $html_agreed,
+        'popup_use_bare_css' => empty($popup_settings['use_bare_css']) ? FALSE : $popup_settings['use_bare_css'],
         'popup_height' => ($popup_settings['popup_height'] !== '') ? (int) $popup_settings['popup_height'] : 'auto',
         'popup_width' => (drupal_substr($popup_settings['popup_width'], -1) == '%') ? $popup_settings['popup_width'] : (int) $popup_settings['popup_width'],
         'popup_delay' => (int) ($popup_settings['popup_delay']),
@@ -155,9 +158,16 @@ function eu_cookie_compliance_page_build(&$page) {
       );
       cache_set($cid, $data, 'cache', CACHE_PERMANENT);
     }
-    drupal_add_css($data['css'], array('type' => 'inline'));
+    if ($data['css']) {
+      drupal_add_css($data['css'], ['type' => 'inline']);
+    }
     drupal_add_js(array('eu_cookie_compliance' => $data['variables']), array('type' => 'setting', 'scope' => 'footer'));
-    drupal_add_css(drupal_get_path('module', 'eu_cookie_compliance') . '/css/eu_cookie_compliance.css');
+    if (!isset($popup_settings['use_bare_css']) || $popup_settings['use_bare_css'] == 0) {
+      drupal_add_css(drupal_get_path('module', 'eu_cookie_compliance') . '/css/eu_cookie_compliance.css');
+    }
+    else {
+      drupal_add_css(drupal_get_path('module', 'eu_cookie_compliance') . '/css/eu_cookie_compliance.bare.css');
+    }
     drupal_add_js(drupal_get_path('module', 'eu_cookie_compliance') . '/js/eu_cookie_compliance.js', array('type' => 'file', 'scope' => 'footer'));
   }
 }
