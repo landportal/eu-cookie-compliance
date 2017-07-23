@@ -21,7 +21,7 @@ function eu_cookie_compliance_menu() {
     'access arguments' => array('administer EU Cookie Compliance popup'),
     'file' => 'eu_cookie_compliance.admin.inc',
   );
-  if (module_exists('geoip') || module_exists('smart_ip') || function_exists('geoip_country_code_by_name')) {
+  if (module_exists('geoip') || module_exists('smart_ip') || extension_loaded('geoip')) {
     $items['eu-cookie-compliance-check'] = array(
       'title' => 'Check if visit is in EU',
       'page callback' => 'eu_cookie_compliance_json',
@@ -264,7 +264,7 @@ function eu_cookie_compliance_user_in_eu() {
   // to the array above.
   $eu_countries = variable_get('eu_cookie_compliance_eu_countries', $eu_countries_default);
 
-  $country_code = function_exists('geoip_country_code_by_name') ? geoip_country_code_by_name(ip_address()) : '';
+  $country_code = extension_loaded('geoip') ? geoip_country_code_by_name(ip_address()) : '';
   if (module_exists('geoip')) {
     $country_code = geoip_country_code();
   }
