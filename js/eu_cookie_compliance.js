@@ -53,11 +53,14 @@
         }
       }
       catch(e) {
+        console.log(e);
       }
   };
 
   Drupal.eu_cookie_compliance.createPopup = function(html) {
-    var $popup = $(html).attr('id', 'sliding-popup');
+    // This fixes a problem with jQuery 1.9.
+    var $popup = $('<div></div>').html(html);
+    $popup.attr('id', 'sliding-popup');
     if (!Drupal.settings.eu_cookie_compliance.popup_use_bare_css) {
       $popup.height(Drupal.settings.eu_cookie_compliance.popup_height)
           .width(Drupal.settings.eu_cookie_compliance.popup_width);
@@ -187,7 +190,7 @@
       }
     }
     date.setDate(date.getDate() + parseInt(Drupal.settings.eu_cookie_compliance.cookie_lifetime));
-    $.cookie('cookie-agreed', status, {expires: date.toUTCString(), path: path, domain: domain});
+    $.cookie('cookie-agreed', status, {expires: date, path: path, domain: domain});
   };
 
   Drupal.eu_cookie_compliance.hasAgreed = function() {
