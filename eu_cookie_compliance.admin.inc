@@ -385,7 +385,7 @@ function eu_cookie_compliance_admin_form_validate($form, &$form_state) {
         $current_language = !empty($language->language) ? $language->language : 'en';
         $languages = array($current_language => $current_language);
       }
-      foreach($languages as $key => $language) {
+      foreach($languages as $key => $current_language) {
         if ($use_domain) {
           foreach ($domains as $domain) {
             cache_clear_all('eu_cookie_compliance_client_settings:' . $key . ':' . $theme->name . ':' . $domain['domain_id'], 'cache', TRUE);
