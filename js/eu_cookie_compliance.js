@@ -6,7 +6,35 @@
       if (context !== document) {
         return;
       }
-      try {
+
+      // If configured, check JSON callback to determine if in EU.
+      if (Drupal.settings.eu_cookie_compliance.popup_eu_only_js) {
+        if (Drupal.eu_cookie_compliance.showBanner()) {
+          var url = Drupal.settings.basePath + 'eu-cookie-compliance-check';
+          var data = {};
+          $.getJSON(url, data, function(data) {
+            // If in the EU, show the compliance popup.
+            if (data.in_eu) {
+              Drupal.eu_cookie_compliance.execute();
+            }
+            // If not in EU, set an agreed cookie automatically.
+            else {
+              Drupal.eu_cookie_compliance.setStatus(2);
+            }
+          });
+        }
+      }
+      // Otherwise, fallback to standard behavior which is to render the popup.
+      else {
+        Drupal.eu_cookie_compliance.execute();
+      }
+    }
+  };
+
+  Drupal.eu_cookie_compliance = {};
+
+  Drupal.eu_cookie_compliance.execute = function() {
+    try {
         if (!Drupal.settings.eu_cookie_compliance.popup_enabled) {
           return;
         }
@@ -26,10 +54,7 @@
       }
       catch(e) {
       }
-    }
   };
-
-  Drupal.eu_cookie_compliance = {};
 
   Drupal.eu_cookie_compliance.createPopup = function(html) {
     var $popup = $(html).attr('id', 'sliding-popup');
@@ -168,6 +193,19 @@
   Drupal.eu_cookie_compliance.hasAgreed = function() {
     var status = Drupal.eu_cookie_compliance.getCurrentStatus();
     return ((status === 1 || status === 2) || (Drupal.settings.eu_cookie_compliance.disagree_do_not_show_popup && status === 0));
+  };
+
+  Drupal.eu_cookie_compliance.showBanner = function() {
+    var showBanner = false;
+    var status = Drupal.eu_cookie_compliance.getCurrentStatus();
+    if (status === 0 || status === null) {
+      if (!Drupal.settings.eu_cookie_compliance.disagree_do_not_show_popup || status === null) {
+        showBanner = true;
+      }
+    } else if (status === 1 && Drupal.settings.eu_cookie_compliance.popup_agreed_enabled) {
+      showBanner = true;
+    }
+    return showBanner;
   };
 
   Drupal.eu_cookie_compliance.cookiesEnabled = function() {

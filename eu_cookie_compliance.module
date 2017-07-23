@@ -17,10 +17,17 @@ function eu_cookie_compliance_menu() {
     'title' => 'EU Cookie Compliance',
     'description' => 'Make your web site compliant with the EU Directive on Privacy and Electronic Communications.',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('eu_cookie_compliance_admin_form', $default_language),
+    'page arguments' => array('eu_cookie_compliance_admin_form'),
     'access arguments' => array('administer EU Cookie Compliance popup'),
     'file' => 'eu_cookie_compliance.admin.inc',
   );
+  if (module_exists('geoip') || module_exists('smart_ip') || function_exists('geoip_country_code_by_name')) {
+    $items['eu-cookie-compliance-check'] = array(
+      'title' => 'Check if visit is in EU',
+      'page callback' => 'eu_cookie_compliance_json',
+      'access arguments' => array('display EU Cookie Compliance popup'),
+    );
+  }
 
   return $items;
 }
@@ -70,26 +77,9 @@ function eu_cookie_compliance_page_build(&$page) {
     $admin_page_match = TRUE;
   }
 
+  $geoip_match = TRUE;
   if (isset($popup_settings['eu_only']) && $popup_settings['eu_only']) {
-    // Use the geoip function if exists.
-    $country_code = function_exists('geoip_country_code_by_name') ? geoip_country_code_by_name(ip_address()) : '';
-    if (module_exists('geoip')) {
-      $country_code = geoip_country_code();
-    }
-    elseif (module_exists('smart_ip')) {
-      $smart_ip_session = smart_ip_session_get('smart_ip');
-      $country_code = isset($smart_ip_session['location']['country_code']) ? $smart_ip_session['location']['country_code'] : NULL;
-    }
-    $geoip_match = FALSE;
-    if (in_array($country_code, array(NULL, 'BE', 'BG', 'CZ', 'DK', 'DE', 'EE', 'GB', 'IE', 'EL', 'ES', 'FR', 'HR', 'IT', 'CY', 'LV', 'LT', 'LU', 'HU', 'MT', 'NL', 'NO', 'AT', 'PL', 'PT', 'RO', 'SI', 'SK', 'FI', 'SE', 'UK'))) {
-      $geoip_match = TRUE;
-    }
-    if ($country_code == '') {
-      $geoip_match = TRUE;
-    }
-  }
-  else {
-    $geoip_match = TRUE;
+    $geoip_match = eu_cookie_compliance_user_in_eu();
   }
 
   if (!empty($popup_settings['popup_enabled']) && user_access('display EU Cookie Compliance popup') && $geoip_match && $domain_allow && !$path_match && !$admin_page_match) {
@@ -153,10 +143,15 @@ function eu_cookie_compliance_page_build(&$page) {
         'popup_position' => empty($popup_settings['popup_position']) ? NULL : $popup_settings['popup_position'],
         'popup_language' => $language->language,
         'domain' => variable_get('eu_cookie_compliance_domain', ''),
+        'popup_eu_only_js' => isset($popup_settings['eu_only_js']) ? $popup_settings['eu_only_js'] : 0,
         'cookie_lifetime' => variable_get('eu_cookie_compliance_cookie_lifetime', 100),
         'disagree_do_not_show_popup' => isset($popup_settings['disagree_do_not_show_popup']) ? $popup_settings['disagree_do_not_show_popup'] : 0,
       );
-      cache_set($cid, $data, 'cache', CACHE_PERMANENT);
+      // For some reason, we're getting the wrong language when editing the
+      // localized form, so we shouldn't cache.
+      if (empty($_GET['variable_realm_key_language'])) {
+        cache_set($cid, $data, 'cache', CACHE_PERMANENT);
+      }
     }
     if ($data['css']) {
       drupal_add_css($data['css'], ['type' => 'inline']);
@@ -240,4 +235,49 @@ function eu_cookie_compliance_get_settings($setting = 'all') {
   else {
     return NULL;
   }
+}
+
+/**
+ * Menu callback for return JSON EU visitor status.
+ */
+function eu_cookie_compliance_json() {
+  $data = eu_cookie_compliance_user_in_eu();
+  drupal_add_http_header('Cache-Control', 'private');
+  drupal_json_output($data);
+  drupal_exit();
+}
+
+/**
+ * Check if the user is in the EU.
+ */
+function eu_cookie_compliance_user_in_eu() {
+  $geoip_match = TRUE;
+  $eu_countries_default = array(
+    NULL, 'BE', 'BG', 'CZ', 'DK', 'DE', 'EE', 'IE', 'EL', 'ES', 'FR', 'HR',
+    'IT', 'CY', 'LV', 'LT', 'LU', 'HU', 'MT', 'NL', 'AT', 'PL', 'PT', 'RO',
+    'SI', 'SK', 'FI', 'SE', 'UK', 'GB',
+  );
+  // Allow custom array of countries to be loaded from settings.php, defaulting
+  // to the array above.
+  $eu_countries = variable_get('eu_cookie_compliance_eu_countries', $eu_countries_default);
+
+  $country_code = function_exists('geoip_country_code_by_name') ? geoip_country_code_by_name(ip_address()) : '';
+  if (module_exists('geoip')) {
+    $country_code = geoip_country_code();
+  }
+  elseif (module_exists('smart_ip')) {
+    $smart_ip_session = smart_ip_session_get('smart_ip');
+    $country_code = isset($smart_ip_session['location']['country_code']) ? $smart_ip_session['location']['country_code'] : NULL;
+  }
+  if (in_array($country_code, $eu_countries)) {
+    $geoip_match = TRUE;
+  }
+  if ($country_code == '') {
+    $geoip_match = TRUE;
+  }
+
+  return array(
+    'country' => $country_code,
+    'in_eu' => $geoip_match,
+  );
 }

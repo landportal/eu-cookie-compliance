@@ -186,7 +186,7 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     '#type' => $form_color_picker_type,
     '#title' => t('Text Color'),
     '#default_value' => isset($popup_settings['popup_text_hex']) ? check_plain($popup_settings['popup_text_hex']) : 'ffffff',
-    '#description' => t('Change the text color of the popup. Provide HEX value without the #'),
+    '#description' => t('Change the text color of the popup. Provide HEX value without the #.'),
     '#element_validate' => array('eu_cookie_compliance_validate_hex'),
   );
 
@@ -195,7 +195,7 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     '#title' => t('Background Color'),
     // Garland colors => 0779BF.
     '#default_value' => isset($popup_settings['popup_bg_hex']) ? check_plain($popup_settings['popup_bg_hex']) : '0779BF',
-    '#description' => t('Change the background color of the popup. Provide HEX value without the #'),
+    '#description' => t('Change the background color of the popup. Provide HEX value without the #.'),
     '#element_validate' => array('eu_cookie_compliance_validate_hex'),
   );
 
@@ -217,7 +217,7 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     '#size' => 5,
     '#maxlength' => 5,
     '#required' => FALSE,
-    '#description' => t('Set the width of the popup. This can be either an integer value or percentage of the screen width. For example: 200 or 50%'),
+    '#description' => t('Set the width of the popup. This can be either an integer value or percentage of the screen width. For example: 200 or 50%.'),
   );
 
   $form['advanced'] = array(
@@ -236,14 +236,21 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     '#type' => 'checkbox',
     '#title' => t('Place the pop-up at the top of the website'),
     '#default_value' => isset($popup_settings['popup_position']) ? $popup_settings['popup_position'] : 0,
-    '#description' => t('By default the pop-up appears at the bottom of the website. Tick this box if you want it to appear at the top'),
+    '#description' => t('By default the pop-up appears at the bottom of the website. Tick this box if you want it to appear at the top.'),
   );
 
   if (module_exists('geoip') || module_exists('smart_ip') || function_exists('geoip_country_code_by_name')) {
     $form['advanced']['eu_cookie_compliance']['eu_only'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Only display popup in EU countries (using the <a href="http://drupal.org/project/geoip">geoip</a> module or the <a href="http://drupal.org/project/smart_ip">smart_ip</a> module or the <a href="http://www.php.net/manual/fr/function.geoip-country-code-by-name.php">geoip_country_code_by_name()</a> PHP function)'),
+      '#title' => t('Only display popup in EU countries'),
       '#default_value' => isset($popup_settings['eu_only']) ? $popup_settings['eu_only'] : 0,
+      '#description' => 'Using the <a href="http://drupal.org/project/geoip">geoip</a> module or the <a href="http://drupal.org/project/smart_ip">smart_ip</a> module or the <a href="http://www.php.net/manual/fr/function.geoip-country-code-by-name.php">geoip_country_code_by_name()</a> PHP function.',
+    );
+    $form['advanced']['eu_cookie_compliance']['eu_only_js'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('JavaScript-based (for Varnish): Only display popup in EU countries'),
+      '#default_value' => isset($popup_settings['eu_only_js']) ? $popup_settings['eu_only_js'] : 0,
+      '#description' => 'Using the <a href="http://drupal.org/project/geoip">geoip</a> module or the <a href="http://drupal.org/project/smart_ip">smart_ip</a> module or the <a href="http://www.php.net/manual/fr/function.geoip-country-code-by-name.php">geoip_country_code_by_name()</a> PHP function.',
     );
   }
 
