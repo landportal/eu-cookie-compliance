@@ -85,7 +85,13 @@ function eu_cookie_compliance_page_build(&$page) {
   if (!empty($popup_settings['popup_enabled']) && user_access('display EU Cookie Compliance popup') && $geoip_match && $domain_allow && !$path_match && !$admin_page_match) {
     global $language;
     // Array storage for caching full client data.
-    $cid = 'eu_cookie_compliance_client_settings:' . $language->language . ':' . $theme;
+    if (module_exists('domain')) {
+      global $_domain;
+      $cid = 'eu_cookie_compliance_client_settings:' . $language->language . ':' . $theme . ':' . $_domain['domain_id'];
+    }
+    else {
+      $cid = 'eu_cookie_compliance_client_settings:' . $language->language . ':' . $theme;
+    }
     $data = array();
     if($cache = cache_get($cid, 'cache')) {
       $data = $cache->data;

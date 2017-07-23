@@ -368,13 +368,25 @@ function eu_cookie_compliance_admin_form_validate($form, &$form_state) {
     form_set_error('eu_cookie_compliance][popup_link', t('Looks like your privacy policy link contains a fragment #. You should make this an absolute url, e.g. @link', array('@link' => $popup_link)));
   }
 
+  $use_domain = FALSE;
+  if (module_exists('domain')) {
+    $domains = domain_domains();
+    $use_domain = TRUE;
+  }
   // Clear cache for all enabled themes.
   $themes = system_rebuild_theme_data();
   foreach ($themes as $theme) {
     if ($theme->status == 1) {
       $languages = locale_language_list();
       foreach($languages as $key => $language) {
-        cache_clear_all('eu_cookie_compliance_client_settings:' . $key . ':' . $theme->name, 'cache', TRUE);
+        if ($use_domain) {
+          foreach ($domains as $domain) {
+            cache_clear_all('eu_cookie_compliance_client_settings:' . $key . ':' . $theme->name . ':' . $domain['domain_id'], 'cache', TRUE);
+          }
+        }
+        else {
+          cache_clear_all('eu_cookie_compliance_client_settings:' . $key . ':' . $theme->name, 'cache', TRUE);
+        }
       }
     }
   }
