@@ -70,6 +70,9 @@ function eu_cookie_compliance_page_build(&$page) {
   if (isset($popup_settings['exclude_paths'])) {
     $path = drupal_strtolower(drupal_get_path_alias($_GET['q']));
     $path_match = drupal_match_path($path, $popup_settings['exclude_paths']);
+    if ($path != $_GET['q']) {
+      $path_match = $path_match || drupal_match_path($_GET['q'], $popup_settings['exclude_paths']);
+    }
   }
 
   // Check exclude admin pages.
