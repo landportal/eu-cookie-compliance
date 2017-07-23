@@ -280,7 +280,7 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     '#type' => 'textfield',
     '#title' => t('Domain'),
     '#default_value' => variable_get('eu_cookie_compliance_domain', ''),
-    '#description' => t('Sets the domain of the cookie to a specific url. Used when you need consistency across domains. This is language independent.'),
+    '#description' => t('Sets the domain of the cookie to a specific url. Used when you need consistency across domains. This is language independent. Note: Make sure you actually enter a domain that the browser can make use of. For example if your site is accessible at both www.domain.com and domain.com, you will not be able to hide the banner at domain.com if your value for this field is www.domain.com.'),
   );
 
   $form['advanced']['eu_cookie_compliance_cookie_lifetime'] = array(
