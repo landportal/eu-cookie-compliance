@@ -164,7 +164,10 @@ function eu_cookie_compliance_page_build(&$page) {
       }
     }
     if ($data['css']) {
-      drupal_add_css($data['css'], ['type' => 'inline']);
+      drupal_add_css($data['css'], array(
+        'type' => 'inline',
+        'weight' => 1000,
+      ));
     }
 
     $script_scope = isset($popup_settings['script_scope']) ? $popup_settings['script_scope'] : 'footer';
