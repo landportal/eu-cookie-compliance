@@ -273,7 +273,7 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     '#type' => 'checkbox',
     '#title' => t('Consent by scrolling'),
     '#default_value' => isset($popup_settings['popup_scrolling_confirmation']) ? $popup_settings['popup_scrolling_confirmation'] : 0,
-    '#description' => t("Scrolling makes the visitors to accept the cookie policy. In some countries, like Italy, it is permitted."),
+    '#description' => t('Scrolling makes the visitors to accept the cookie policy. In some countries, like Italy, it is permitted.'),
   );
 
   $form['advanced']['eu_cookie_compliance_domain'] = array(
@@ -287,7 +287,7 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     '#type' => 'textfield',
     '#title' => t('Cookie lifetime'),
     '#default_value' => variable_get('eu_cookie_compliance_cookie_lifetime', 100),
-    '#description' => t("How long does the system remember the user's choice, in days."),
+    '#description' => t('How long does the system remember the user’s choice, in days.'),
   );
 
   // Adding option to add/remove popup on specified domains.
@@ -300,26 +300,34 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     '#title' => t('Add/Remove popup on specified domains'),
     '#default_value' => isset($popup_settings['domains_option']) ? $popup_settings['domains_option'] : 1,
     '#options' => $exclude_domains_option_active,
-    '#description' => t("Specify if you want to add or remove popup on the listed below domains."),
+    '#description' => t('Specify if you want to add or remove popup on the listed below domains.'),
   );
   $form['advanced']['eu_cookie_compliance']['domains_list'] = array(
     '#type' => 'textarea',
     '#title' => t('Domains list'),
     '#default_value' => isset($popup_settings['domains_list']) ? $popup_settings['domains_list'] : '',
-    '#description' => t("Specify domains with protocol (e.g. http or https). Enter one domain per line."),
+    '#description' => t('Specify domains with protocol (e.g. http or https). Enter one domain per line.'),
   );
 
   $form['advanced']['eu_cookie_compliance']['exclude_paths'] = array(
     '#type' => 'textarea',
     '#title' => t('Exclude paths'),
     '#default_value' => isset($popup_settings['exclude_paths']) ? $popup_settings['exclude_paths'] : '',
-    '#description' => t("Specify pages by using their paths. Enter one path per line. The '*' character is a wildcard. Example paths are %blog for the blog page and %blog-wildcard for every personal blog. %front is the front page.", array('%blog' => 'blog', '%blog-wildcard' => 'blog/*', '%front' => '<front>')),
+    '#description' => t('Specify pages by using their paths. Enter one path per line. The '*' character is a wildcard. Example paths are %blog for the blog page and %blog-wildcard for every personal blog. %front is the front page.', array('%blog' => 'blog', '%blog-wildcard' => 'blog/*', '%front' => '<front>')),
   );
 
   $form['advanced']['eu_cookie_compliance']['exclude_admin_pages'] = array(
     '#type' => 'checkbox',
     '#title' => t('Exclude admin pages'),
     '#default_value' => isset($popup_settings['exclude_admin_pages']) ? $popup_settings['exclude_admin_pages'] : '',
+  );
+
+  $form['advanced']['eu_cookie_compliance']['script_scope'] = array(
+    '#type' => 'select',
+    '#title' => t('Script scope'),
+    '#options' => array('header' => 'Header (Scripts variable)', 'footer' => 'Footer (Page bottom variable)'),
+    '#default_value' => isset($popup_settings['script_scope']) ? $popup_settings['script_scope'] : 'footer',
+    '#description' => t('If you want to use the hasAgreed() function from other scripts, you may want to change this to header.'),
   );
 
   $form['#attached']['js'][] = drupal_get_path('module', 'eu_cookie_compliance'). '/js/eu_cookie_compliance.admin.js';
@@ -334,7 +342,7 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
  * @param array $form_state
  */
 function eu_cookie_compliance_admin_form_validate($form, &$form_state) {
-  if ((!preg_match('/^[1-9][0-9]{0,4}$/', $form_state['values']['eu_cookie_compliance']['popup_delay'])) && ($form_state['values']['eu_cookie_compliance']['popup_delay'] != "0")) {
+  if ((!preg_match('/^[1-9][0-9]{0,4}$/', $form_state['values']['eu_cookie_compliance']['popup_delay'])) && ($form_state['values']['eu_cookie_compliance']['popup_delay'] != '0')) {
     form_set_error('eu_cookie_compliance][popup_delay', t('Delay must be an integer value.'));
   }
   if (empty($form_state['values']['eu_cookie_compliance']['use_bare_css'])) {

@@ -108,7 +108,7 @@ function eu_cookie_compliance_page_build(&$page) {
       $position = $popup_settings['popup_position'] ? 'top' : 'bottom';
       if (empty($popup_settings['use_bare_css'])) {
         if ($popup_settings['popup_bg_hex'] != '') {
-          $data['css'] = '#sliding-popup.sliding-popup-' . $position . ' {background:#' . check_plain($popup_settings["popup_bg_hex"]) . ';}';
+          $data['css'] = '#sliding-popup.sliding-popup-' . $position . ' {background:#' . check_plain($popup_settings['popup_bg_hex']) . ';}';
         }
         if ($popup_settings['popup_text_hex'] != '') {
           $data['css'] .= '#sliding-popup .popup-content #popup-text h1, #sliding-popup .popup-content #popup-text h2, #sliding-popup .popup-content #popup-text h3, #sliding-popup .popup-content #popup-text p {color:#' . check_plain($popup_settings['popup_text_hex']) . ' !important;}';
@@ -156,14 +156,17 @@ function eu_cookie_compliance_page_build(&$page) {
     if ($data['css']) {
       drupal_add_css($data['css'], ['type' => 'inline']);
     }
-    drupal_add_js(array('eu_cookie_compliance' => $data['variables']), array('type' => 'setting', 'scope' => 'footer'));
+
+    $script_scope = isset($popup_settings['script_scope']) ? $popup_settings['script_scope'] : 'footer';
+
+    drupal_add_js(array('eu_cookie_compliance' => $data['variables']), array('type' => 'setting', 'scope' => $script_scope));
     if (!isset($popup_settings['use_bare_css']) || $popup_settings['use_bare_css'] == 0) {
       drupal_add_css(drupal_get_path('module', 'eu_cookie_compliance') . '/css/eu_cookie_compliance.css');
     }
     else {
       drupal_add_css(drupal_get_path('module', 'eu_cookie_compliance') . '/css/eu_cookie_compliance.bare.css');
     }
-    drupal_add_js(drupal_get_path('module', 'eu_cookie_compliance') . '/js/eu_cookie_compliance.js', array('type' => 'file', 'scope' => 'footer'));
+    drupal_add_js(drupal_get_path('module', 'eu_cookie_compliance') . '/js/eu_cookie_compliance.js', array('type' => 'file', 'scope' => $script_scope));
   }
 }
 
