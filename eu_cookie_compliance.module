@@ -55,6 +55,7 @@ function eu_cookie_compliance_page_build(&$page) {
     global $base_url;
     $domains_list = str_replace(array("\r\n", "\r"), "\n", $popup_settings['domains_list']);
     $domains_list = explode("\n", $domains_list);
+    $domains_list = preg_replace('{/$}', '', $domains_list);
     $domain_match = in_array($base_url, $domains_list);
     if ($domain_option && $domain_match) {
       $domain_allow = FALSE;
