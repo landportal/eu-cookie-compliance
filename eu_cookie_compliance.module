@@ -228,16 +228,11 @@ function eu_cookie_compliance_theme() {
 /**
  * Retrieves settings from the database for a current language.
  *
- * @param string|boolean $current_language
- *   Language to retrieve settings.
- *
  * @param string $setting
  *   Setting to retrieve.
  *
- * @global object $language
- *
  * @return string|null|array
- *   if no settings defined return NULL
+ *   if no settings are defined, this function returns NULL.
  */
 function eu_cookie_compliance_get_settings($setting = 'all') {
   $popup_settings = variable_get('eu_cookie_compliance', array());
