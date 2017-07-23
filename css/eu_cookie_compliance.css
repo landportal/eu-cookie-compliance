@@ -3,6 +3,7 @@
   padding: 0;
   width: 100%;
   z-index: 99999;
+  text-align: center;
 }
 
 .sliding-popup-bottom,
@@ -21,6 +22,9 @@
 #sliding-popup .popup-content {
   margin: 0 auto;
   max-width: 80%;
+  display: inline-block;
+  text-align: left;
+  width: 100%;
 }
 
 #sliding-popup .popup-content #popup-buttons {
