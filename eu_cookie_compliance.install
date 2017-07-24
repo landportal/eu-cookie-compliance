@@ -90,6 +90,8 @@ function eu_cookie_compliance_update_7001(&$sandbox) {
           variable_del($name);
         }
       }
+      // i18n_variable requires an entry in the variable table.
+      variable_set('eu_cookie_compliance', $value);
       // Enable translation variables for EU Cookie Compliance.
       $controller = variable_realm_controller('language');
       $old_variables = $controller->getEnabledVariables();
