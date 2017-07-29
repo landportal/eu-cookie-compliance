@@ -52,7 +52,7 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
   $form['popup_message']['eu_cookie_compliance']['popup_clicking_confirmation'] = array(
     '#type' => 'checkbox',
     '#title' => t('Consent by clicking'),
-    '#description' => t('By default by clicking any link on the website the visitor accepts the cookie policy. Uncheck this box if you do not require this functionality. You may want to edit the pop-up message below accordingly.'),
+    '#description' => t('By default by clicking any link or button on the website the visitor accepts the cookie policy. Uncheck this box if you do not require this functionality. You may want to edit the pop-up message below accordingly.'),
     '#default_value' => isset($popup_settings['popup_clicking_confirmation']) ? $popup_settings['popup_clicking_confirmation'] : 1,
   );
 
@@ -102,7 +102,7 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     '#type' => 'checkbox',
     '#title' => t('Clicking hides “Thank you” message'),
     '#default_value' => isset($popup_settings['popup_hide_agreed']) ? $popup_settings['popup_hide_agreed'] : 0,
-    '#description' => t('Clicking a link hides the thank you message automatically.'),
+    '#description' => t('Clicking a link or button hides the thank you message automatically.'),
   );
 
   $form['thank_you']['eu_cookie_compliance']['popup_agreed'] = array(
