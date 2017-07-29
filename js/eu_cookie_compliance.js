@@ -137,11 +137,13 @@
       Drupal.eu_cookie_compliance.setStatus(0);
       $('#sliding-popup').remove();
     }
-    if (Drupal.settings.eu_cookie_compliance.popup_link_new_window) {
-      window.open(Drupal.settings.eu_cookie_compliance.popup_link);
-    }
     else {
-      window.location.href = Drupal.settings.eu_cookie_compliance.popup_link;
+      if (Drupal.settings.eu_cookie_compliance.popup_link_new_window) {
+        window.open(Drupal.settings.eu_cookie_compliance.popup_link);
+      }
+      else {
+        window.location.href = Drupal.settings.eu_cookie_compliance.popup_link;
+      }
     }
   };
 
@@ -199,7 +201,7 @@
 
   Drupal.eu_cookie_compliance.hasAgreed = function() {
     var status = Drupal.eu_cookie_compliance.getCurrentStatus();
-    return ((status === 1 || status === 2) || (Drupal.settings.eu_cookie_compliance.disagree_do_not_show_popup && status === 0));
+    return (status === 1 || status === 2);
   };
 
   Drupal.eu_cookie_compliance.showBanner = function() {
