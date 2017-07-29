@@ -244,13 +244,13 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
       '#type' => 'checkbox',
       '#title' => t('Only display popup in EU countries'),
       '#default_value' => isset($popup_settings['eu_only']) ? $popup_settings['eu_only'] : 0,
-      '#description' => 'Using the <a href="http://drupal.org/project/geoip">geoip</a> module or the <a href="http://drupal.org/project/smart_ip">smart_ip</a> module or the <a href="http://www.php.net/manual/fr/function.geoip-country-code-by-name.php">geoip_country_code_by_name()</a> PHP function.',
+      '#description' => 'If you want to limit the number of countries for which the cookie is displayed, you can place an array in <code>$conf[\'eu_cookie_compliance_eu_countries\']</code> in your <code>settings.php</code>. Using the <a href="http://drupal.org/project/geoip">geoip</a> module or the <a href="http://drupal.org/project/smart_ip">smart_ip</a> module or the <a href="http://www.php.net/manual/fr/function.geoip-country-code-by-name.php">geoip_country_code_by_name()</a> PHP function.',
     );
     $form['advanced']['eu_cookie_compliance']['eu_only_js'] = array(
       '#type' => 'checkbox',
       '#title' => t('JavaScript-based (for Varnish): Only display popup in EU countries'),
       '#default_value' => isset($popup_settings['eu_only_js']) ? $popup_settings['eu_only_js'] : 0,
-      '#description' => 'Using the <a href="http://drupal.org/project/geoip">geoip</a> module or the <a href="http://drupal.org/project/smart_ip">smart_ip</a> module or the <a href="http://www.php.net/manual/fr/function.geoip-country-code-by-name.php">geoip_country_code_by_name()</a> PHP function.',
+      '#description' => 'If you want to limit the number of countries for which the cookie is displayed, you can place an array in <code>$conf[\'eu_cookie_compliance_eu_countries\']</code> in your <code>settings.php</code>. Using the <a href="http://drupal.org/project/geoip">geoip</a> module or the <a href="http://drupal.org/project/smart_ip">smart_ip</a> module or the <a href="http://www.php.net/manual/fr/function.geoip-country-code-by-name.php">geoip_country_code_by_name()</a> PHP function.',
     );
   }
 
