@@ -239,6 +239,13 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     '#description' => t('By default the pop-up appears at the bottom of the website. Tick this box if you want it to appear at the top.'),
   );
 
+  $form['advanced']['eu_cookie_compliance']['fixed_top_position'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('If the banner is at the top, don’t scroll the banner with the page'),
+    '#default_value' => isset($popup_settings['fixed_top_position']) ? $popup_settings['fixed_top_position'] : 0,
+    '#description' => t('Use position:fixed for the banner when displayed at the top.'),
+  );
+
   if (module_exists('geoip') || module_exists('smart_ip') || extension_loaded('geoip')) {
     $form['advanced']['eu_cookie_compliance']['eu_only'] = array(
       '#type' => 'checkbox',
