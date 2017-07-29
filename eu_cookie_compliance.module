@@ -25,6 +25,7 @@ function eu_cookie_compliance_menu() {
     $items['eu-cookie-compliance-check'] = array(
       'title' => 'Check if visit is in EU',
       'page callback' => 'eu_cookie_compliance_json',
+      'type' => MENU_CALLBACK,
       'access arguments' => array('display EU Cookie Compliance popup'),
     );
   }
