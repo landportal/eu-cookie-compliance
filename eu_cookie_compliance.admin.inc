@@ -329,6 +329,12 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     '#default_value' => isset($popup_settings['exclude_admin_pages']) ? $popup_settings['exclude_admin_pages'] : '',
   );
 
+  $form['advanced']['eu_cookie_compliance']['exclude_uid_1'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Don’t show the banner for UID 1.'),
+    '#default_value' => isset($popup_settings['exclude_uid_1']) ? $popup_settings['exclude_uid_1'] : 0,
+  );
+
   $form['advanced']['eu_cookie_compliance']['script_scope'] = array(
     '#type' => 'select',
     '#title' => t('Script scope'),

@@ -46,7 +46,7 @@ function eu_cookie_compliance_page_alter(&$page) {
  */
 function eu_cookie_compliance_page_build(&$page) {
   $popup_settings = eu_cookie_compliance_get_settings();
-  global $theme;
+  global $theme, $user;
 
   // Check Add/Remove domains
   $domain_allow = TRUE;
@@ -87,7 +87,12 @@ function eu_cookie_compliance_page_build(&$page) {
     $geoip_match = eu_cookie_compliance_user_in_eu();
   }
 
-  if (!empty($popup_settings['popup_enabled']) && user_access('display EU Cookie Compliance popup') && $geoip_match && $domain_allow && !$path_match && !$admin_page_match) {
+  $uid1_match = TRUE;
+  if ($user->uid == 1 && isset($popup_settings['exclude_uid_1']) && $popup_settings['exclude_uid_1']) {
+    $uid1_match = FALSE;
+  }
+
+  if (!empty($popup_settings['popup_enabled']) && user_access('display EU Cookie Compliance popup') && $geoip_match && $domain_allow && !$path_match && !$admin_page_match && $uid1_match) {
     global $language;
     // Array storage for caching full client data.
     if (module_exists('domain')) {
