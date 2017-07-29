@@ -41,6 +41,7 @@
         if (!Drupal.eu_cookie_compliance.cookiesEnabled()) {
           return;
         }
+        Drupal.eu_cookie_compliance.updateCheck();
         var status = Drupal.eu_cookie_compliance.getCurrentStatus();
         if (status === 0 || status === null) {
           if (!Drupal.settings.eu_cookie_compliance.disagree_do_not_show_popup || status === null) {
@@ -233,5 +234,17 @@
       location.reload();
     }
   };
+
+  // This code upgrades the cookie agreed status when upgrading for an old version.
+  Drupal.eu_cookie_compliance.updateCheck = function () {
+    var legacyCookie = 'cookie-agreed-' + Drupal.settings.eu_cookie_compliance.popup_language;
+    var domain = Drupal.settings.eu_cookie_compliance.domain ? Drupal.settings.eu_cookie_compliance.domain : '';
+    var path = Drupal.settings.basePath;
+    var cookie;
+    if ((cookie = $.cookie(legacyCookie)) !== null) {
+      $.cookie('cookie-agreed', cookie, { path:  path, domain: domain });
+      $.cookie(legacyCookie, null, { path: path, domain: domain });
+    }
+  }
 
 })(jQuery);
