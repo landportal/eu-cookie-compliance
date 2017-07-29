@@ -74,7 +74,12 @@
         .css('top', -1 * height)
         .animate({top: 0}, Drupal.settings.eu_cookie_compliance.popup_delay);
     } else {
-      $popup.appendTo('body');
+      if (Drupal.settings.eu_cookie_compliance.better_support_for_screen_readers) {
+        $popup.prependTo('body');
+      }
+      else {
+        $popup.appendTo('body');
+      }
       height = $popup.height();
       $popup.show()
         .attr('class', 'sliding-popup-bottom')

@@ -330,6 +330,13 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     '#description' => t('If you want to use the hasAgreed() function from other scripts, you may want to change this to header.'),
   );
 
+  $form['advanced']['eu_cookie_compliance']['better_support_for_screen_readers'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Let screen readers see the banner before other links on the page.'),
+    '#default_value' => isset($popup_settings['better_support_for_screen_readers']) ? $popup_settings['better_support_for_screen_readers'] : 0,
+    '#description' => t('Enable this if you want to place the banner as the first HTML element on the page. This will make it possible for screen readers to close the banner without tabbing through all links on the page.'),
+  );
+
   $form['#attached']['js'][] = drupal_get_path('module', 'eu_cookie_compliance'). '/js/eu_cookie_compliance.admin.js';
 
   return system_settings_form($form);
