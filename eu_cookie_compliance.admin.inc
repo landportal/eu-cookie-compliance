@@ -270,6 +270,12 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     '#description' => t('Enabling this will make it possible to record the fact that the user disagrees without the user having to see the privacy policy.'),
   );
 
+  $form['advanced']['eu_cookie_compliance']['reload_page'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Reload page after user clicks on “Agree” button.'),
+    '#default_value' => isset($popup_settings['reload_page']) ? $popup_settings['reload_page'] : 0,
+  );
+
   $form['advanced']['eu_cookie_compliance']['popup_scrolling_confirmation'] = array(
     '#type' => 'checkbox',
     '#title' => t('Consent by scrolling'),

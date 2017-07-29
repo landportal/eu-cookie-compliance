@@ -169,6 +169,7 @@
         }
         else if (status === 1) {
           $('#sliding-popup').remove();
+          Drupal.eu_cookie_compliance.reloadPage();
         }
       });
     } else {
@@ -179,6 +180,7 @@
         }
         else if (status === 1) {
           $('#sliding-popup').remove();
+          Drupal.eu_cookie_compliance.reloadPage();
         }
       });
     }
@@ -224,6 +226,12 @@
       cookieEnabled = (document.cookie.indexOf('testCookie') !== -1);
     }
     return cookieEnabled;
+  };
+
+  Drupal.eu_cookie_compliance.reloadPage = function() {
+    if (Drupal.settings.eu_cookie_compliance.reload_page) {
+      location.reload();
+    }
   };
 
 })(jQuery);
