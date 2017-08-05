@@ -327,7 +327,7 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     '#type' => 'textarea',
     '#title' => t('Exclude paths'),
     '#default_value' => isset($popup_settings['exclude_paths']) ? $popup_settings['exclude_paths'] : '',
-    '#description' => t('Specify pages by using their paths. Enter one path per line. The '*' character is a wildcard. Example paths are %blog for the blog page and %blog-wildcard for every personal blog. %front is the front page.', array('%blog' => 'blog', '%blog-wildcard' => 'blog/*', '%front' => '<front>')),
+    '#description' => t('Specify pages by using their paths. Enter one path per line. The ‘*’ character is a wildcard. Example paths are %blog for the blog page and %blog-wildcard for every personal blog. %front is the front page.', array('%blog' => 'blog', '%blog-wildcard' => 'blog/*', '%front' => '<front>')),
   );
 
   $form['advanced']['eu_cookie_compliance']['exclude_admin_pages'] = array(
