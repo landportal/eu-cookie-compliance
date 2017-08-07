@@ -146,7 +146,7 @@ function eu_cookie_compliance_page_build(&$page) {
         $html_agreed = preg_replace('/<!--(.|\s)*?-->/', '', $html_agreed);
       }
       $clicking_confirmation = (isset($popup_settings['popup_clicking_confirmation'])) ? $popup_settings['popup_clicking_confirmation'] : TRUE;
-      $scrolling_confirmation = (isset($popup_settings['popup_scrolling_confirmation']))? $popup_settings['popup_scrolling_confirmation'] : TRUE ;
+      $scrolling_confirmation = (isset($popup_settings['popup_scrolling_confirmation']))? $popup_settings['popup_scrolling_confirmation'] : FALSE;
       $data['variables'] = array(
         'popup_enabled' => $popup_settings['popup_enabled'],
         'popup_agreed_enabled' => $popup_settings['popup_agreed_enabled'],
