@@ -7,27 +7,29 @@
         return;
       }
 
-      // If configured, check JSON callback to determine if in EU.
-      if (Drupal.settings.eu_cookie_compliance.popup_eu_only_js) {
-        if (Drupal.eu_cookie_compliance.showBanner()) {
-          var url = Drupal.settings.basePath + 'eu-cookie-compliance-check';
-          var data = {};
-          $.getJSON(url, data, function(data) {
-            // If in the EU, show the compliance popup.
-            if (data.in_eu) {
-              Drupal.eu_cookie_compliance.execute();
-            }
-            // If not in EU, set an agreed cookie automatically.
-            else {
-              Drupal.eu_cookie_compliance.setStatus(2);
-            }
-          });
+      $('body').once('eu-cookie-compliance', function() {
+        // If configured, check JSON callback to determine if in EU.
+        if (Drupal.settings.eu_cookie_compliance.popup_eu_only_js) {
+          if (Drupal.eu_cookie_compliance.showBanner()) {
+            var url = Drupal.settings.basePath + 'eu-cookie-compliance-check';
+            var data = {};
+            $.getJSON(url, data, function(data) {
+              // If in the EU, show the compliance popup.
+              if (data.in_eu) {
+                Drupal.eu_cookie_compliance.execute();
+              }
+              // If not in EU, set an agreed cookie automatically.
+              else {
+                Drupal.eu_cookie_compliance.setStatus(2);
+              }
+            });
+          }
         }
-      }
-      // Otherwise, fallback to standard behavior which is to render the popup.
-      else {
-        Drupal.eu_cookie_compliance.execute();
-      }
+        // Otherwise, fallback to standard behavior which is to render the popup.
+        else {
+          Drupal.eu_cookie_compliance.execute();
+        }
+      });
     }
   };
 
