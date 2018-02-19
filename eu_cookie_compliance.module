@@ -93,7 +93,11 @@ function eu_cookie_compliance_page_build(&$page) {
     $uid1_match = FALSE;
   }
 
-  if (!empty($popup_settings['popup_enabled']) && user_access('display EU Cookie Compliance popup') && $geoip_match && $domain_allow && !$path_match && !$admin_page_match && $uid1_match) {
+  // Allow other modules to alter if the popup needs to be shown or not.
+  $modules_allow_popup = TRUE;
+  drupal_alter('eu_cookie_compliance_show_popup', $modules_allow_popup);
+
+  if (!empty($popup_settings['popup_enabled']) && user_access('display EU Cookie Compliance popup') && $geoip_match && $domain_allow && !$path_match && !$admin_page_match && $uid1_match && $modules_allow_popup) {
     global $language;
     // Array storage for caching full client data.
     if (module_exists('domain')) {
