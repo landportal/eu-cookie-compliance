@@ -202,6 +202,7 @@
     }
     date.setDate(date.getDate() + parseInt(Drupal.settings.eu_cookie_compliance.cookie_lifetime));
     $.cookie('cookie-agreed', status, {expires: date, path: path, domain: domain});
+    $(document).trigger('eu_cookie_compliance.changeStatus', [ status ]);
   };
 
   Drupal.eu_cookie_compliance.hasAgreed = function() {
