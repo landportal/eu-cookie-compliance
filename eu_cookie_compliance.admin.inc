@@ -148,7 +148,7 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     '#size' => 60,
     '#maxlength' => 220,
     '#required' => TRUE,
-    '#description' => t('Enter link to your privacy policy or other page that will explain cookies to your users. For external links prepend http://'),
+    '#description' => t('Enter link to your privacy policy or other page that will explain cookies to your users. For external links prepend http://. The field supports tokens.'),
   );
 
   $form['privacy']['eu_cookie_compliance']['popup_link_new_window'] = array(
