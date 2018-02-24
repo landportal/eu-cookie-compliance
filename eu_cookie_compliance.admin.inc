@@ -297,6 +297,13 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     '#description' => t('Sets the domain of the cookie to a specific url. Used when you need consistency across domains. This is language independent. Note: Make sure you actually enter a domain that the browser can make use of. For example if your site is accessible at both www.domain.com and domain.com, you will not be able to hide the banner at domain.com if your value for this field is www.domain.com.'),
   );
 
+  $form['advanced']['eu_cookie_compliance']['cookie_name'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Cookie Name'),
+    '#default_value' => isset($popup_settings['cookie_name']) ? $popup_settings['cookie_name'] : '',
+    '#description' => t('Sets the cookie name that is used to check whether the user has agreed or not.  This option is useful when policies change and the user needs to agree again.'),
+  );
+
   $form['advanced']['eu_cookie_compliance_cookie_lifetime'] = array(
     '#type' => 'textfield',
     '#title' => t('Cookie lifetime'),

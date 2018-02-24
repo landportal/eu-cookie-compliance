@@ -172,7 +172,8 @@
   };
 
   Drupal.eu_cookie_compliance.getCurrentStatus = function () {
-    var value = $.cookie('cookie-agreed');
+    var cookieName = (Drupal.settings.eu_cookie_compliance.cookie_name === '') ? 'cookie-agreed' : Drupal.settings.eu_cookie_compliance.cookie_name;
+    var value = $.cookie(cookieName);
     value = parseInt(value);
     if (isNaN(value)) {
       value = null;
@@ -216,6 +217,7 @@
     var date = new Date();
     var domain = Drupal.settings.eu_cookie_compliance.domain ? Drupal.settings.eu_cookie_compliance.domain : '';
     var path = Drupal.settings.basePath;
+    var cookieName = (Drupal.settings.eu_cookie_compliance.cookie_name === '') ? 'cookie-agreed' : Drupal.settings.eu_cookie_compliance.cookie_name;
     if (path.length > 1) {
       var pathEnd = path.length - 1;
       if (path.lastIndexOf('/') === pathEnd) {
@@ -224,7 +226,7 @@
     }
 
     date.setDate(date.getDate() + parseInt(Drupal.settings.eu_cookie_compliance.cookie_lifetime));
-    $.cookie('cookie-agreed', status, { expires: date, path: path, domain: domain });
+    $.cookie(cookieName, status, { expires: date, path: path, domain: domain });
     $(document).trigger('eu_cookie_compliance.changeStatus', [status]);
   };
 
@@ -270,13 +272,15 @@
     var path = Drupal.settings.basePath;
     var cookie = $.cookie(legacyCookie);
     var date = new Date();
+    var cookieName = (Drupal.settings.eu_cookie_compliance.cookie_name === '') ? 'cookie-agreed' : Drupal.settings.eu_cookie_compliance.cookie_name;
+
 
     // jQuery.cookie 1.0 (bundled with Drupal) returns null,
     // jQuery.cookie 1.4.1 (bundled with some themes) returns undefined.
     // We had a 1.4.1 related bug where the value was set to 'null' (string).
     if (cookie !== undefined && cookie !== null && cookie !== 'null') {
       date.setDate(date.getDate() + parseInt(Drupal.settings.eu_cookie_compliance.cookie_lifetime));
-      $.cookie('cookie-agreed', cookie, { expires: date, path:  path, domain: domain });
+      $.cookie(cookieName, cookie, { expires: date, path:  path, domain: domain });
 
       // Use removeCookie if the function exists.
       if (typeof $.removeCookie !== 'undefined') {
