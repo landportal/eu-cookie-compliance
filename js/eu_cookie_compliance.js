@@ -107,7 +107,17 @@
     }
 
     if (scrollConfirms) {
-      $(window).bind('scroll', Drupal.eu_cookie_compliance.acceptAction);
+      var alreadyScrolled = false;
+      var scrollHandler = function () {
+        if (alreadyScrolled) {
+          Drupal.eu_cookie_compliance.acceptAction();
+          $(window).off('scroll', scrollHandler);
+        } else {
+          alreadyScrolled = true;
+        }
+      };
+
+      $(window).bind('scroll', scrollHandler);
     }
 
     $('.find-more-button').not('.find-more-button-processed').addClass('find-more-button-processed').click(Drupal.eu_cookie_compliance.moreInfoAction);
