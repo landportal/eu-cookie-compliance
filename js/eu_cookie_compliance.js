@@ -80,7 +80,9 @@
       $popup.show()
         .attr('class', 'sliding-popup-top clearfix')
         .css('top', -1 * height)
-        .animate({ top: 0 }, Drupal.settings.eu_cookie_compliance.popup_delay);
+        .animate({ top: 0 }, Drupal.settings.eu_cookie_compliance.popup_delay, null, function () {
+          $popup.trigger('eu_cookie_compliance_popup_open');
+        });
     } else {
       if (Drupal.settings.eu_cookie_compliance.better_support_for_screen_readers) {
         $popup.prependTo('body');
@@ -92,7 +94,9 @@
       $popup.show()
         .attr('class', 'sliding-popup-bottom')
         .css('bottom', -1 * height)
-        .animate({ bottom: 0 }, Drupal.settings.eu_cookie_compliance.popup_delay);
+        .animate({ bottom: 0 }, Drupal.settings.eu_cookie_compliance.popup_delay, null, function () {
+          $popup.trigger('eu_cookie_compliance_popup_open');
+        });
     }
   };
 
@@ -157,7 +161,7 @@
   Drupal.eu_cookie_compliance.moreInfoAction = function () {
     if (Drupal.settings.eu_cookie_compliance.disagree_do_not_show_popup) {
       Drupal.eu_cookie_compliance.setStatus(0);
-      $('#sliding-popup').remove();
+      $('#sliding-popup').remove().trigger('eu_cookie_compliance_popup_close');
     } else {
       if (Drupal.settings.eu_cookie_compliance.popup_link_new_window) {
         window.open(Drupal.settings.eu_cookie_compliance.popup_link);
@@ -189,7 +193,7 @@
           $('#sliding-popup').html(Drupal.settings.eu_cookie_compliance.popup_html_agreed).animate({ top: 0 }, Drupal.settings.eu_cookie_compliance.popup_delay);
           Drupal.eu_cookie_compliance.attachHideEvents();
         } else if (status === 1) {
-          $('#sliding-popup').remove();
+          $('#sliding-popup').remove().trigger('eu_cookie_compliance_popup_close');
           Drupal.eu_cookie_compliance.reloadPage();
         }
       });
@@ -199,7 +203,7 @@
           $('#sliding-popup').html(Drupal.settings.eu_cookie_compliance.popup_html_agreed).animate({ bottom: 0 }, Drupal.settings.eu_cookie_compliance.popup_delay);
           Drupal.eu_cookie_compliance.attachHideEvents();
         } else if (status === 1) {
-          $('#sliding-popup').remove();
+          $('#sliding-popup').remove().trigger('eu_cookie_compliance_popup_close');
           Drupal.eu_cookie_compliance.reloadPage();
         }
       });
