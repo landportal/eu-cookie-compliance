@@ -299,7 +299,7 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
 
   $form['advanced']['eu_cookie_compliance']['cookie_name'] = array(
     '#type' => 'textfield',
-    '#title' => t('Cookie Name'),
+    '#title' => t('Cookie name'),
     '#default_value' => isset($popup_settings['cookie_name']) ? $popup_settings['cookie_name'] : '',
     '#description' => t('Sets the cookie name that is used to check whether the user has agreed or not.  This option is useful when policies change and the user needs to agree again.'),
   );
