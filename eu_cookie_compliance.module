@@ -285,7 +285,7 @@ function eu_cookie_compliance_user_in_eu() {
   $eu_countries_default = array(
     NULL, 'BE', 'BG', 'CZ', 'DK', 'DE', 'EE', 'IE', 'EL', 'ES', 'FR', 'HR',
     'IT', 'CY', 'LV', 'LT', 'LU', 'HU', 'MT', 'NL', 'AT', 'PL', 'PT', 'RO',
-    'SI', 'SK', 'FI', 'SE', 'UK', 'GB',
+    'SI', 'SK', 'FI', 'SE', 'UK', 'GB', 'NO',
   );
   // Allow custom array of countries to be loaded from settings.php, defaulting
   // to the array above.
