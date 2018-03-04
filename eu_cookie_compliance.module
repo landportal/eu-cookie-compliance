@@ -281,7 +281,7 @@ function eu_cookie_compliance_json() {
  * Check if the user is in the EU.
  */
 function eu_cookie_compliance_user_in_eu() {
-  $geoip_match = TRUE;
+  $geoip_match = FALSE;
   $eu_countries_default = array(
     NULL, 'BE', 'BG', 'CZ', 'DK', 'DE', 'EE', 'IE', 'EL', 'ES', 'FR', 'HR',
     'IT', 'CY', 'LV', 'LT', 'LU', 'HU', 'MT', 'NL', 'AT', 'PL', 'PT', 'RO',
@@ -302,7 +302,7 @@ function eu_cookie_compliance_user_in_eu() {
   if (in_array($country_code, $eu_countries)) {
     $geoip_match = TRUE;
   }
-  if ($country_code == '') {
+  if ($country_code == '' || $country_code == '-') {
     $geoip_match = TRUE;
   }
 
