@@ -36,7 +36,7 @@ function eu_cookie_compliance_uninstall() {
 }
 
 /**
- * Change the popup delay from seconds to milliseconds.
+ * Change the banner sliding animation time from seconds to milliseconds.
  */
 function eu_cookie_compliance_update_7000(&$sandbox = NULL) {
   global $language;

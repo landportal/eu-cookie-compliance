@@ -96,7 +96,7 @@ function eu_cookie_compliance_page_build(&$page) {
     $uid1_match = FALSE;
   }
 
-  // Allow other modules to alter if the popup needs to be shown or not.
+  // Allow other modules to alter if the banner needs to be shown or not.
   $modules_allow_popup = TRUE;
   drupal_alter('eu_cookie_compliance_show_popup', $modules_allow_popup);
 
@@ -216,10 +216,10 @@ function eu_cookie_compliance_page_build(&$page) {
 function eu_cookie_compliance_permission() {
   return array(
     'administer EU Cookie Compliance popup' => array(
-      'title' => 'Administer EU Cookie Compliance popup',
+      'title' => 'Administer EU Cookie Compliance banner',
     ),
     'display EU Cookie Compliance popup' => array(
-      'title' => 'Display EU Cookie Compliance popup',
+      'title' => 'Display EU Cookie Compliance banner',
     ),
   );
 }

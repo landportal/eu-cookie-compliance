@@ -10,7 +10,7 @@
             var url = Drupal.settings.basePath + 'eu-cookie-compliance-check';
             var data = {};
             $.getJSON(url, data, function (data) {
-              // If in the EU, show the compliance popup.
+              // If in the EU, show the compliance banner.
               if (data.in_eu) {
                 Drupal.eu_cookie_compliance.execute();
               }
@@ -23,7 +23,7 @@
           }
         }
 
-        // Otherwise, fallback to standard behavior which is to render the popup.
+        // Otherwise, fallback to standard behavior which is to render the banner.
         else {
           Drupal.eu_cookie_compliance.execute();
         }

@@ -5,7 +5,7 @@
  */
 
 /**
- * Provides form for cookie control popup.
+ * Provides form for cookie control banner.
  *
  * @param array $form
  * @param array $form_state
@@ -28,18 +28,18 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
   );
 
   $form['eu_cookie_compliance']['info'] = array(
-    '#markup' => t('<p><strong>Note:</strong> <ul><li>The permission "Display EU Cookie Compliance popup" needs to be enabled for Anonymous and Authenticated users in order for the banner to appear.</li><li>In order for the module to work, <code>$scripts</code> needs to be output before <code>$page_bottom</code> in your <code>html.tpl.php</code>.</li></ul></p>'),
+    '#markup' => t('<p><strong>Note:</strong> <ul><li>The permission “Display EU Cookie Compliance banner” needs to be enabled for Anonymous and Authenticated users in order for the banner to appear.</li><li>In order for the module to work, <code>$scripts</code> needs to be output before <code>$page_bottom</code> in your <code>html.tpl.php</code>.</li></ul></p>'),
   );
 
   $form['eu_cookie_compliance']['popup_enabled'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Enable popup'),
+    '#title' => t('Enable banner'),
     '#default_value' => isset($popup_settings['popup_enabled']) ? $popup_settings['popup_enabled'] : 0,
   );
 
   $form['popup_message'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Popup Message'),
+    '#title' => t('Cookie information banner Message'),
     '#collapsible' => TRUE,
     '#collapsed' => FALSE,
   );
@@ -52,13 +52,13 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
   $form['popup_message']['eu_cookie_compliance']['popup_clicking_confirmation'] = array(
     '#type' => 'checkbox',
     '#title' => t('Consent by clicking'),
-    '#description' => t('By default by clicking any link or button on the website the visitor accepts the cookie policy. Uncheck this box if you do not require this functionality. You may want to edit the pop-up message below accordingly.'),
+    '#description' => t('By default by clicking any link or button on the website the visitor accepts the cookie policy. Uncheck this box if you do not require this functionality. You may want to edit the banner message below accordingly.'),
     '#default_value' => isset($popup_settings['popup_clicking_confirmation']) ? $popup_settings['popup_clicking_confirmation'] : 1,
   );
 
   $form['popup_message']['eu_cookie_compliance']['popup_info'] = array(
     '#type' => 'text_format',
-    '#title' => t('Popup message - requests consent'),
+    '#title' => t('Cookie information banner message'),
     '#default_value' => isset($popup_settings['popup_info']['value']) ? $popup_settings['popup_info']['value'] : '',
     '#required' => TRUE,
     '#format' => isset($popup_settings['popup_info']['format']) ? $popup_settings['popup_info']['format'] : $default_filter_format,
@@ -77,7 +77,7 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
 
   $form['popup_message']['eu_cookie_compliance']['container']['mobile_popup_info'] = array(
     '#type' => 'text_format',
-    '#title' => t('Mobile popup message - requests consent'),
+    '#title' => t('Cookie information banner message - mobile'),
     '#default_value' => isset($popup_settings['mobile_popup_info']['value']) ? $popup_settings['mobile_popup_info']['value'] : '',
     '#required' => FALSE,
     '#format' => isset($popup_settings['mobile_popup_info']['format']) ? $popup_settings['mobile_popup_info']['format'] : $default_filter_format,
@@ -94,8 +94,8 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     '#required' => FALSE,
     '#description' => t('The mobile message will be used when the window width is below or equal to the given value.'),
     '#states' => array(
-      "visible" => array(
-        "input[name='eu_cookie_compliance[use_mobile_message]']" => array("checked" => TRUE)),
+      'visible' => array(
+        "input[name='eu_cookie_compliance[use_mobile_message]']" => array('checked' => TRUE)),
     ),
   );
 
@@ -119,7 +119,7 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     '#type' => 'fieldset',
     '#collapsible' => TRUE,
     '#collapsed' => FALSE,
-    '#title' => t('Thank You Message'),
+    '#title' => t('Thank you banner'),
   );
 
   $form['thank_you']['eu_cookie_compliance'] = array(
@@ -129,20 +129,20 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
 
   $form['thank_you']['eu_cookie_compliance']['popup_agreed_enabled'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Enable thank you message'),
+    '#title' => t('Enable thank you banner'),
     '#default_value' => isset($popup_settings['popup_agreed_enabled']) ? $popup_settings['popup_agreed_enabled'] : 1,
   );
 
   $form['thank_you']['eu_cookie_compliance']['popup_hide_agreed'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Clicking hides “Thank you” message'),
+    '#title' => t('Clicking hides “Thank you” banner'),
     '#default_value' => isset($popup_settings['popup_hide_agreed']) ? $popup_settings['popup_hide_agreed'] : 0,
     '#description' => t('Clicking a link or button hides the thank you message automatically.'),
   );
 
   $form['thank_you']['eu_cookie_compliance']['popup_agreed'] = array(
     '#type' => 'text_format',
-    '#title' => t('Popup message - thank you for giving consent'),
+    '#title' => t('Thank you banner message'),
     '#default_value' => isset($popup_settings['popup_agreed']['value']) ? $popup_settings['popup_agreed']['value'] : '',
     '#required' => TRUE,
     '#format' => isset($popup_settings['popup_agreed']['format']) ? $popup_settings['popup_agreed']['format'] : $default_filter_format,
@@ -212,20 +212,20 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
 
   $form['appearance']['eu_cookie_compliance']['use_bare_css'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Include minimal CSS, I want to style the overlay in the theme CSS.'),
+    '#title' => t('Include minimal CSS, I want to style the banner in the theme CSS.'),
     '#default_value' => isset($popup_settings['use_bare_css']) ? check_plain($popup_settings['use_bare_css']) : 0,
-    '#description' => t('This may be useful if you want the overlay to share the button style of your theme. Note that you will have to configure values like the overlay width, text color and background color in your CSS file.'),
+    '#description' => t('This may be useful if you want the banner to share the button style of your theme. Note that you will have to configure values like the banner width, text color and background color in your CSS file.'),
   );
 
   $form['appearance']['eu_cookie_compliance']['popup_text_hex'] = array(
     '#type' => $form_color_picker_type,
     '#title' => t('Text Color'),
     '#default_value' => isset($popup_settings['popup_text_hex']) ? check_plain($popup_settings['popup_text_hex']) : 'ffffff',
-    '#description' => t('Change the text color of the popup. Provide HEX value without the #.'),
+    '#description' => t('Change the text color of the banner. Provide HEX value without the #.'),
     '#element_validate' => array('eu_cookie_compliance_validate_hex'),
     '#states' => array(
-      "visible" => array(
-        "input[name='eu_cookie_compliance[use_bare_css]']" => array("checked" => FALSE)),
+      'visible' => array(
+        "input[name='eu_cookie_compliance[use_bare_css]']" => array('checked' => FALSE)),
     ),
   );
 
@@ -234,39 +234,39 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     '#title' => t('Background Color'),
     // Garland colors => 0779BF.
     '#default_value' => isset($popup_settings['popup_bg_hex']) ? check_plain($popup_settings['popup_bg_hex']) : '0779BF',
-    '#description' => t('Change the background color of the popup. Provide HEX value without the #.'),
+    '#description' => t('Change the background color of the banner. Provide HEX value without the #.'),
     '#element_validate' => array('eu_cookie_compliance_validate_hex'),
     '#states' => array(
-      "visible" => array(
-        "input[name='eu_cookie_compliance[use_bare_css]']" => array("checked" => FALSE)),
+      'visible' => array(
+        "input[name='eu_cookie_compliance[use_bare_css]']" => array('checked' => FALSE)),
     ),
   );
 
   $form['appearance']['eu_cookie_compliance']['popup_height'] = array(
     '#type' => 'textfield',
-    '#title' => t('Popup height in pixels'),
+    '#title' => t('Banner height in pixels'),
     '#default_value' => isset($popup_settings['popup_height']) ? $popup_settings['popup_height'] : '',
     '#size' => 5,
     '#maxlength' => 5,
     '#required' => FALSE,
     '#description' => t('Enter an integer value for a desired height in pixels or leave empty for automatically adjusted height. Do not set this value if you are using responsive theme.'),
     '#states' => array(
-      "visible" => array(
-        "input[name='eu_cookie_compliance[use_bare_css]']" => array("checked" => FALSE)),
+      'visible' => array(
+        "input[name='eu_cookie_compliance[use_bare_css]']" => array('checked' => FALSE)),
     ),
   );
 
   $form['appearance']['eu_cookie_compliance']['popup_width'] = array(
     '#type' => 'textfield',
-    '#title' => t('Popup width in pixels or a percentage value'),
+    '#title' => t('Banner width in pixels or a percentage value'),
     '#default_value' => isset($popup_settings['popup_width']) ? $popup_settings['popup_width'] : '100%',
     '#size' => 5,
     '#maxlength' => 5,
     '#required' => FALSE,
-    '#description' => t('Set the width of the popup. This can be either an integer value or percentage of the screen width. For example: 200 or 50%.'),
+    '#description' => t('Set the width of the banner. This can be either an integer value or percentage of the screen width. For example: 200 or 50%.'),
     '#states' => array(
-      "visible" => array(
-        "input[name='eu_cookie_compliance[use_bare_css]']" => array("checked" => FALSE)),
+      'visible' => array(
+        "input[name='eu_cookie_compliance[use_bare_css]']" => array('checked' => FALSE)),
     ),
   );
 
@@ -284,9 +284,9 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
 
   $form['advanced']['eu_cookie_compliance']['popup_position'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Place the pop-up at the top of the website'),
+    '#title' => t('Place the banner at the top of the website'),
     '#default_value' => isset($popup_settings['popup_position']) ? $popup_settings['popup_position'] : 0,
-    '#description' => t('By default the pop-up appears at the bottom of the website. Tick this box if you want it to appear at the top.'),
+    '#description' => t('By default the banner appears at the bottom of the website. Tick this box if you want it to appear at the top.'),
   );
 
   $form['advanced']['eu_cookie_compliance']['fixed_top_position'] = array(
@@ -299,13 +299,13 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
   if (module_exists('geoip') || module_exists('smart_ip') || extension_loaded('geoip')) {
     $form['advanced']['eu_cookie_compliance']['eu_only'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Only display popup in EU countries'),
+      '#title' => t('Only display banner in EU countries'),
       '#default_value' => isset($popup_settings['eu_only']) ? $popup_settings['eu_only'] : 0,
       '#description' => t('You can limit the number of countries for which the banner is displayed by checking this option. If you want to provide a list of countries other than current EU states, you may place an array in <code>$conf[\'eu_cookie_compliance_eu_countries\']</code> in your <code>settings.php</code> file. Using the <a href="http://drupal.org/project/geoip">geoip</a> module or the <a href="http://drupal.org/project/smart_ip">smart_ip</a> module or the <a href="http://www.php.net/manual/fr/function.geoip-country-code-by-name.php">geoip_country_code_by_name()</a> PHP function.'),
     );
     $form['advanced']['eu_cookie_compliance']['eu_only_js'] = array(
       '#type' => 'checkbox',
-      '#title' => t('JavaScript-based (for Varnish): Only display popup in EU countries'),
+      '#title' => t('JavaScript-based (for Varnish): Only display banner in EU countries'),
       '#default_value' => isset($popup_settings['eu_only_js']) ? $popup_settings['eu_only_js'] : 0,
       '#description' => t('This option also works for visitors that bypass Varnish. You can limit the number of countries for which the banner is displayed by checking this option. If you want to provide a list of countries other than current EU states, you may place an array in <code>$conf[\'eu_cookie_compliance_eu_countries\']</code> in your <code>settings.php</code> file. Using the <a href="http://drupal.org/project/geoip">geoip</a> module or the <a href="http://drupal.org/project/smart_ip">smart_ip</a> module or the <a href="http://www.php.net/manual/fr/function.geoip-country-code-by-name.php">geoip_country_code_by_name()</a> PHP function.'),
     );
@@ -313,7 +313,7 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
 
   $form['advanced']['eu_cookie_compliance']['popup_delay'] = array(
     '#type' => 'textfield',
-    '#title' => t('Popup time delay in milliseconds'),
+    '#title' => t('Banner sliding animation time in milliseconds'),
     '#default_value' => isset($popup_settings['popup_delay']) ? $popup_settings['popup_delay'] : 1000,
     '#size' => 5,
     '#maxlength' => 5,
@@ -322,14 +322,14 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
 
   $form['advanced']['eu_cookie_compliance']['disagree_do_not_show_popup'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Do not show popup after user clicks on "Disagree" button.'),
+    '#title' => t('Do not show cookie policy when the user clicks the “Disagree” button.'),
     '#default_value' => isset($popup_settings['disagree_do_not_show_popup']) ? $popup_settings['disagree_do_not_show_popup'] : 0,
     '#description' => t('Enabling this will make it possible to record the fact that the user disagrees without the user having to see the privacy policy.'),
   );
 
   $form['advanced']['eu_cookie_compliance']['reload_page'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Reload page after user clicks on “Agree” button.'),
+    '#title' => t('Reload page after user clicks the “Agree” button.'),
     '#default_value' => isset($popup_settings['reload_page']) ? $popup_settings['reload_page'] : 0,
   );
 
@@ -361,17 +361,17 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     '#description' => t('How long does the system remember the user’s choice, in days.'),
   );
 
-  // Adding option to add/remove popup on specified domains.
+  // Adding option to add/remove banner on specified domains.
   $exclude_domains_option_active = array(
     0 => t('Add'),
     1 => t('Remove'),
   );
   $form['advanced']['eu_cookie_compliance']['domains_option'] = array(
     '#type' => 'radios',
-    '#title' => t('Add/Remove popup on specified domains'),
+    '#title' => t('Add/Remove banner on specified domains'),
     '#default_value' => isset($popup_settings['domains_option']) ? $popup_settings['domains_option'] : 1,
     '#options' => $exclude_domains_option_active,
-    '#description' => t('Specify if you want to add or remove popup on the listed below domains.'),
+    '#description' => t('Specify if you want to add or remove banner on the listed below domains.'),
   );
   $form['advanced']['eu_cookie_compliance']['domains_list'] = array(
     '#type' => 'textarea',
@@ -418,7 +418,7 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
 }
 
 /**
- * Validates form for cookie control popup.
+ * Validates form for cookie control banner.
  *
  * @param array $form
  * @param array $form_state

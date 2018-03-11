@@ -46,7 +46,7 @@ function hook_eu_cookie_compliance_path_match_alter(&$excluded, $path, $setting)
  * Alter hook to provide advanced logic for hiding the banner.
  *
  * @param boolean $show_popup
- *   Whether to show the popup.
+ *   Whether to show the banner.
  */
 function hook_eu_cookie_compliance_show_popup_alter(&$show_popup) {
   $node = menu_get_object('node');
