@@ -187,30 +187,33 @@
 
   Drupal.eu_cookie_compliance.changeStatus = function (value) {
     var status = Drupal.eu_cookie_compliance.getCurrentStatus();
+    var reloadPage = Drupal.settings.eu_cookie_compliance.reload_page;
     if (status === value) {
       return;
     }
 
     if (Drupal.settings.eu_cookie_compliance.popup_position) {
       $('.sliding-popup-top').animate({ top: $('#sliding-popup').outerHeight() * -1 }, Drupal.settings.eu_cookie_compliance.popup_delay, function () {
-        if (status === null) {
+        if (status === null && !reloadPage) {
           $('#sliding-popup').html(Drupal.settings.eu_cookie_compliance.popup_html_agreed).animate({ top: 0 }, Drupal.settings.eu_cookie_compliance.popup_delay);
           Drupal.eu_cookie_compliance.attachHideEvents();
         } else if (status === 1) {
           $('#sliding-popup').remove().trigger('eu_cookie_compliance_popup_close');
-          Drupal.eu_cookie_compliance.reloadPage();
         }
       });
     } else {
       $('.sliding-popup-bottom').animate({ bottom: $('#sliding-popup').outerHeight() * -1 }, Drupal.settings.eu_cookie_compliance.popup_delay, function () {
-        if (status === null) {
+        if (status === null && !reloadPage) {
           $('#sliding-popup').html(Drupal.settings.eu_cookie_compliance.popup_html_agreed).animate({ bottom: 0 }, Drupal.settings.eu_cookie_compliance.popup_delay);
           Drupal.eu_cookie_compliance.attachHideEvents();
         } else if (status === 1) {
           $('#sliding-popup').remove().trigger('eu_cookie_compliance_popup_close');
-          Drupal.eu_cookie_compliance.reloadPage();
         }
       });
+    }
+
+    if (reloadPage) {
+      location.reload();
     }
 
     Drupal.eu_cookie_compliance.setStatus(value);
@@ -260,12 +263,6 @@
     }
 
     return cookieEnabled;
-  };
-
-  Drupal.eu_cookie_compliance.reloadPage = function () {
-    if (Drupal.settings.eu_cookie_compliance.reload_page) {
-      location.reload();
-    }
   };
 
   // This code upgrades the cookie agreed status when upgrading for an old version.
