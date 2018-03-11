@@ -223,6 +223,10 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     '#default_value' => isset($popup_settings['popup_text_hex']) ? check_plain($popup_settings['popup_text_hex']) : 'ffffff',
     '#description' => t('Change the text color of the popup. Provide HEX value without the #.'),
     '#element_validate' => array('eu_cookie_compliance_validate_hex'),
+    '#states' => array(
+      "visible" => array(
+        "input[name='eu_cookie_compliance[use_bare_css]']" => array("checked" => FALSE)),
+    ),
   );
 
   $form['appearance']['eu_cookie_compliance']['popup_bg_hex'] = array(
@@ -232,6 +236,10 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     '#default_value' => isset($popup_settings['popup_bg_hex']) ? check_plain($popup_settings['popup_bg_hex']) : '0779BF',
     '#description' => t('Change the background color of the popup. Provide HEX value without the #.'),
     '#element_validate' => array('eu_cookie_compliance_validate_hex'),
+    '#states' => array(
+      "visible" => array(
+        "input[name='eu_cookie_compliance[use_bare_css]']" => array("checked" => FALSE)),
+    ),
   );
 
   $form['appearance']['eu_cookie_compliance']['popup_height'] = array(
@@ -242,7 +250,10 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     '#maxlength' => 5,
     '#required' => FALSE,
     '#description' => t('Enter an integer value for a desired height in pixels or leave empty for automatically adjusted height. Do not set this value if you are using responsive theme.'),
-
+    '#states' => array(
+      "visible" => array(
+        "input[name='eu_cookie_compliance[use_bare_css]']" => array("checked" => FALSE)),
+    ),
   );
 
   $form['appearance']['eu_cookie_compliance']['popup_width'] = array(
@@ -253,6 +264,10 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     '#maxlength' => 5,
     '#required' => FALSE,
     '#description' => t('Set the width of the popup. This can be either an integer value or percentage of the screen width. For example: 200 or 50%.'),
+    '#states' => array(
+      "visible" => array(
+        "input[name='eu_cookie_compliance[use_bare_css]']" => array("checked" => FALSE)),
+    ),
   );
 
   $form['advanced'] = array(
@@ -398,8 +413,6 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     '#default_value' => isset($popup_settings['better_support_for_screen_readers']) ? $popup_settings['better_support_for_screen_readers'] : 0,
     '#description' => t('Enable this if you want to place the banner as the first HTML element on the page. This will make it possible for screen readers to close the banner without tabbing through all links on the page.'),
   );
-
-  $form['#attached']['js'][] = drupal_get_path('module', 'eu_cookie_compliance'). '/js/eu_cookie_compliance.admin.js';
 
   return system_settings_form($form);
 }
