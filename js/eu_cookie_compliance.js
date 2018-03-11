@@ -3,10 +3,6 @@
 
   Drupal.behaviors.eu_cookie_compliance_popup = {
     attach: function (context, settings) {
-      if (context !== document) {
-        return;
-      }
-
       $('body').once('eu-cookie-compliance', function () {
         // If configured, check JSON callback to determine if in EU.
         if (Drupal.settings.eu_cookie_compliance.popup_eu_only_js) {
@@ -51,7 +47,14 @@
       var status = Drupal.eu_cookie_compliance.getCurrentStatus();
       if (status === 0 || status === null) {
         if (!Drupal.settings.eu_cookie_compliance.disagree_do_not_show_popup || status === null) {
-          Drupal.eu_cookie_compliance.createPopup(Drupal.settings.eu_cookie_compliance.popup_html_info);
+          // Detect mobile here and use mobile_popup_html_info, if we have a mobile device.
+          if (window.matchMedia('(max-width: ' + Drupal.settings.eu_cookie_compliance.mobile_breakpoint + 'px)').matches && Drupal.settings.eu_cookie_compliance.use_mobile_message) {
+            Drupal.eu_cookie_compliance.createPopup(Drupal.settings.eu_cookie_compliance.mobile_popup_html_info);
+          }
+          else {
+            Drupal.eu_cookie_compliance.createPopup(Drupal.settings.eu_cookie_compliance.popup_html_info);
+          }
+
           Drupal.eu_cookie_compliance.attachAgreeEvents();
         }
       } else if (status === 1 && Drupal.settings.eu_cookie_compliance.popup_agreed_enabled) {
@@ -76,10 +79,10 @@
     var height = 0;
     if (Drupal.settings.eu_cookie_compliance.popup_position) {
       $popup.prependTo('body');
-      height = $popup.height();
+      height = $popup.outerHeight();
       $popup.show()
-        .attr('class', 'sliding-popup-top clearfix')
-        .css('top', -1 * height)
+        .attr({ class: 'sliding-popup-top clearfix' })
+        .css({ top: -1 * height })
         .animate({ top: 0 }, Drupal.settings.eu_cookie_compliance.popup_delay, null, function () {
           $popup.trigger('eu_cookie_compliance_popup_open');
         });
@@ -90,10 +93,10 @@
         $popup.appendTo('body');
       }
 
-      height = $popup.height();
+      height = $popup.outerHeight();
       $popup.show()
-        .attr('class', 'sliding-popup-bottom')
-        .css('bottom', -1 * height)
+        .attr({ class: 'sliding-popup-bottom' })
+        .css({ bottom: -1 * height })
         .animate({ bottom: 0 }, Drupal.settings.eu_cookie_compliance.popup_delay, null, function () {
           $popup.trigger('eu_cookie_compliance_popup_open');
         });
@@ -189,7 +192,7 @@
     }
 
     if (Drupal.settings.eu_cookie_compliance.popup_position) {
-      $('.sliding-popup-top').animate({ top: $('#sliding-popup').height() * -1 }, Drupal.settings.eu_cookie_compliance.popup_delay, function () {
+      $('.sliding-popup-top').animate({ top: $('#sliding-popup').outerHeight() * -1 }, Drupal.settings.eu_cookie_compliance.popup_delay, function () {
         if (status === null) {
           $('#sliding-popup').html(Drupal.settings.eu_cookie_compliance.popup_html_agreed).animate({ top: 0 }, Drupal.settings.eu_cookie_compliance.popup_delay);
           Drupal.eu_cookie_compliance.attachHideEvents();
@@ -199,7 +202,7 @@
         }
       });
     } else {
-      $('.sliding-popup-bottom').animate({ bottom: $('#sliding-popup').height() * -1 }, Drupal.settings.eu_cookie_compliance.popup_delay, function () {
+      $('.sliding-popup-bottom').animate({ bottom: $('#sliding-popup').outerHeight() * -1 }, Drupal.settings.eu_cookie_compliance.popup_delay, function () {
         if (status === null) {
           $('#sliding-popup').html(Drupal.settings.eu_cookie_compliance.popup_html_agreed).animate({ bottom: 0 }, Drupal.settings.eu_cookie_compliance.popup_delay);
           Drupal.eu_cookie_compliance.attachHideEvents();

@@ -64,6 +64,41 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     '#format' => isset($popup_settings['popup_info']['format']) ? $popup_settings['popup_info']['format'] : $default_filter_format,
   );
 
+  $form['popup_message']['eu_cookie_compliance']['use_mobile_message'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Use a different message for mobile phones'),
+    '#default_value' =>  isset($popup_settings['use_mobile_message']) ? $popup_settings['use_mobile_message'] : 0,
+  );
+
+  $form['popup_message']['eu_cookie_compliance']['container'] = array(
+    '#type' => 'container',
+    '#states' => array('visible' => array('input[name="eu_cookie_compliance[use_mobile_message]"]' => array('checked' => true))),
+  );
+
+  $form['popup_message']['eu_cookie_compliance']['container']['mobile_popup_info'] = array(
+    '#type' => 'text_format',
+    '#title' => t('Mobile popup message - requests consent'),
+    '#default_value' => isset($popup_settings['mobile_popup_info']['value']) ? $popup_settings['mobile_popup_info']['value'] : '',
+    '#required' => FALSE,
+    '#format' => isset($popup_settings['mobile_popup_info']['format']) ? $popup_settings['mobile_popup_info']['format'] : $default_filter_format,
+    '#parents' => array('eu_cookie_compliance', 'mobile_popup_info'),
+  );
+
+  $form['popup_message']['eu_cookie_compliance']['mobile_breakpoint'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Mobile breakpoint'),
+    '#default_value' => isset($popup_settings['mobile_breakpoint']) ? $popup_settings['mobile_breakpoint'] : 768,
+    '#field_suffix' => ' ' . t('pixels'),
+    '#size' => 4,
+    '#maxlength' => 4,
+    '#required' => FALSE,
+    '#description' => t('The mobile message will be used when the window width is below or equal to the given value.'),
+    '#states' => array(
+      "visible" => array(
+        "input[name='eu_cookie_compliance[use_mobile_message]']" => array("checked" => TRUE)),
+    ),
+  );
+
   $form['popup_message']['eu_cookie_compliance']['popup_agree_button_message'] = array(
     '#type' => 'textfield',
     '#title' => t('Agree button label'),
@@ -402,35 +437,7 @@ function eu_cookie_compliance_admin_form_validate($form, &$form_state) {
     form_set_error('eu_cookie_compliance][popup_link', t('Looks like your privacy policy link contains a fragment #. You should make this an absolute url, e.g. @link', array('@link' => $popup_link)));
   }
 
-  $use_domain = FALSE;
-  if (module_exists('domain')) {
-    $domains = domain_domains();
-    $use_domain = TRUE;
-  }
-  // Clear cache for all enabled themes.
-  $themes = system_rebuild_theme_data();
-  foreach ($themes as $theme) {
-    if ($theme->status == 1) {
-      if (module_exists('locale')) {
-        $languages = locale_language_list();
-      }
-      else {
-        global $language;
-        $current_language = !empty($language->language) ? $language->language : 'en';
-        $languages = array($current_language => $current_language);
-      }
-      foreach($languages as $key => $current_language) {
-        if ($use_domain) {
-          foreach ($domains as $domain) {
-            cache_clear_all('eu_cookie_compliance_client_settings:' . $key . ':' . $theme->name . ':' . $domain['domain_id'], 'cache', TRUE);
-          }
-        }
-        else {
-          cache_clear_all('eu_cookie_compliance_client_settings:' . $key . ':' . $theme->name, 'cache', TRUE);
-        }
-      }
-    }
-  }
+  eu_cookie_compliance_clear_caches();
 }
 
 /**

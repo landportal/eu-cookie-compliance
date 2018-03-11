@@ -16,6 +16,16 @@
  */
 
 /**
+ * Alter the geo_ip_match variable.
+ *
+ * @param bool &$geoip_match
+ *   Whether to show the cookie compliance banner.
+ */
+function hook_eu_cookie_compliance_geoip_match_alter(&$geoip_match) {
+  $geoip_match = FALSE;
+}
+
+/**
  * Take control of EU Cookie Compliance path exclusion.
  *
  * @param boolean $excluded

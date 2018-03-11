@@ -88,6 +88,9 @@ function eu_cookie_compliance_page_build(&$page) {
     $geoip_match = eu_cookie_compliance_user_in_eu();
   }
 
+  // Allow other modules to alter the geo IP matching logic.
+  drupal_alter('eu_cookie_compliance_geoip_match', $geoip_match);
+
   $uid1_match = TRUE;
   if ($user->uid == 1 && isset($popup_settings['exclude_uid_1']) && $popup_settings['exclude_uid_1']) {
     $uid1_match = FALSE;
@@ -141,7 +144,9 @@ function eu_cookie_compliance_page_build(&$page) {
 
       $popup_text_info = str_replace(array("\r", "\n"), '', $popup_settings['popup_info']['value']);
       $popup_text_agreed = str_replace(array("\r", "\n"), '', $popup_settings['popup_agreed']['value']);
+      $mobile_popup_text_info = str_replace(array("\r", "\n"), '', !empty($popup_settings['mobile_popup_info']['value']) ? $popup_settings['mobile_popup_info']['value'] : '');
       $html_info = theme('eu_cookie_compliance_popup_info', array('message' => check_markup($popup_text_info, $popup_settings['popup_info']['format'], FALSE), 'agree_button' => $popup_settings['popup_agree_button_message'], 'disagree_button' => $popup_settings['popup_disagree_button_message']));
+      $mobile_html_info = theme('eu_cookie_compliance_popup_info', array('message' => check_markup($mobile_popup_text_info, $popup_settings['popup_info']['format'], FALSE), 'agree_button' => $popup_settings['popup_agree_button_message'], 'disagree_button' => $popup_settings['popup_disagree_button_message']));
       $html_agreed = theme('eu_cookie_compliance_popup_agreed', array('message' => check_markup($popup_text_agreed, $popup_settings['popup_agreed']['format'], FALSE), 'hide_button' => $popup_settings['popup_hide_button_message'], 'find_more_button' => $popup_settings['popup_find_more_button_message']));
       // Check if theme_debug is enabled.
       if (variable_get('theme_debug') == 1) {
@@ -158,6 +163,9 @@ function eu_cookie_compliance_page_build(&$page) {
         'popup_clicking_confirmation' => $clicking_confirmation,
         'popup_scrolling_confirmation' => $scrolling_confirmation,
         'popup_html_info' => empty($html_info) ? FALSE : trim($html_info),
+        'use_mobile_message' => !empty($popup_settings['use_mobile_message']) ? $popup_settings['use_mobile_message'] : FALSE,
+        'mobile_popup_html_info' => $popup_settings['popup_enabled'] ? $mobile_html_info : FALSE,
+        'mobile_breakpoint' => !empty($popup_settings['mobile_breakpoint']) ? $popup_settings['mobile_breakpoint'] : '768',
         'popup_html_agreed' => empty($html_agreed) ? FALSE : trim($html_agreed),
         'popup_use_bare_css' => empty($popup_settings['use_bare_css']) ? FALSE : $popup_settings['use_bare_css'],
         'popup_height' => ($popup_settings['popup_height'] !== '') ? (int) $popup_settings['popup_height'] : 'auto',
@@ -310,4 +318,36 @@ function eu_cookie_compliance_user_in_eu() {
     'country' => $country_code,
     'in_eu' => $geoip_match,
   );
+}
+
+function eu_cookie_compliance_clear_caches() {
+  $use_domain = FALSE;
+  if (module_exists('domain')) {
+    $domains = domain_domains();
+    $use_domain = TRUE;
+  }
+  // Clear cache for all enabled themes.
+  $themes = system_rebuild_theme_data();
+  foreach ($themes as $theme) {
+    if ($theme->status == 1) {
+      if (module_exists('locale')) {
+        $languages = locale_language_list();
+      }
+      else {
+        global $language;
+        $current_language = !empty($language->language) ? $language->language : 'en';
+        $languages = array($current_language => $current_language);
+      }
+      foreach($languages as $key => $current_language) {
+        if ($use_domain) {
+          foreach ($domains as $domain) {
+            cache_clear_all('eu_cookie_compliance_client_settings:' . $key . ':' . $theme->name . ':' . $domain['domain_id'], 'cache', TRUE);
+          }
+        }
+        else {
+          cache_clear_all('eu_cookie_compliance_client_settings:' . $key . ':' . $theme->name, 'cache', TRUE);
+        }
+      }
+    }
+  }
 }

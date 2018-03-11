@@ -113,3 +113,9 @@ function eu_cookie_compliance_update_7002(&$sandbox) {
   db_query('delete from {menu_links} where link_path = \'eu-cookie-compliance-check\'');
 }
 
+/**
+ * Clear caches to initialize new module settings.
+ */
+function eu_cookie_compliance_update_7003(&$sandbox) {
+  eu_cookie_compliance_clear_caches();
+}
