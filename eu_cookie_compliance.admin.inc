@@ -107,12 +107,26 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     '#required' => TRUE,
   );
 
+  $form['popup_message']['eu_cookie_compliance']['show_disagree_button'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Show "Disagree" and "More info" buttons'),
+    '#description' => t('If this option is checked, the disagree button will be shown on the site. Disabling this option will hide both the "Disagree" button on the information banner and the "More info" button on the "Thank you" banner.'),
+    '#default_value' => isset($popup_settings['show_disagree_button']) ? $popup_settings['show_disagree_button'] : TRUE,
+  );
+
   $form['popup_message']['eu_cookie_compliance']['popup_disagree_button_message'] = array(
     '#type' => 'textfield',
     '#title' => t('Disagree button label'),
     '#default_value' => isset($popup_settings['popup_disagree_button_message']) ? $popup_settings['popup_disagree_button_message'] : t('No, give me more info'),
     '#size' => 30,
-    '#required' => TRUE,
+    '#states' => array(
+      'visible' => array(
+        'input[name="eu_cookie_compliance[show_disagree_button]"]' => array('checked' => TRUE),
+      ),
+      'required' => array(
+        'input[name="eu_cookie_compliance[show_disagree_button]"]' => array('checked' => TRUE),
+      ),
+    ),
   );
 
   $form['thank_you'] = array(
@@ -154,6 +168,14 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     '#default_value' => isset($popup_settings['popup_find_more_button_message']) ? $popup_settings['popup_find_more_button_message'] : t('More info'),
     '#size' => 30,
     '#required' => TRUE,
+    '#states' => array(
+      'visible' => array(
+        'input[name="eu_cookie_compliance[show_disagree_button]"]' => array('checked' => TRUE),
+      ),
+      'required' => array(
+        'input[name="eu_cookie_compliance[show_disagree_button]"]' => array('checked' => TRUE),
+      ),
+    ),
   );
 
   $form['thank_you']['eu_cookie_compliance']['popup_hide_button_message'] = array(
