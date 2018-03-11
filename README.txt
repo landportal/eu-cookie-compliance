@@ -42,8 +42,11 @@ Installation.
 6. If you want to theme your pop-up override the themes in the template file.
 
 7. If you want to show the message in EU countries only, install the geoip
-   module: http://drupal.org/project/geoip and enable the option on the admin
-   page.
+   module: http://drupal.org/project/geoip or the smart_ip module:
+   http://drupal.org/project/smart_ip and enable the option "Only display popup
+   in EU countries" on the admin page. There is a JavaScript based option
+   available for sites that use Varnish (or other caching strategies). The
+   JavaScript based variant also works for visitors that bypass Varnish.
 
 8. To translate the message displayed, enable the i18n_variable module in the
    i18n package. After enabling "EU Cookie Compliance" at
