@@ -13,7 +13,7 @@
  * Variables available:
  * - $message:  Contains the text that will be display whithin the pop-up
  * - $agree_button: Contains agree button title
- * - $disagree_button: Contains disagree button title
+ * - $disagree_button: Contains Cookie policy button title
  */
 ?>
 <div>

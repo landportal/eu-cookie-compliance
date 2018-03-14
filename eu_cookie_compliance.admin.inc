@@ -109,14 +109,14 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
 
   $form['popup_message']['eu_cookie_compliance']['show_disagree_button'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Show "Disagree" and "More info" buttons'),
-    '#description' => t('If this option is checked, the disagree button will be shown on the site. Disabling this option will hide both the "Disagree" button on the information banner and the "More info" button on the "Thank you" banner.'),
+    '#title' => t('Show "Cookie policy" and "More info" buttons'),
+    '#description' => t('If this option is checked, the Cookie policy button will be shown on the site. Disabling this option will hide both the "Cookie policy" button on the information banner and the "More info" button on the "Thank you" banner.'),
     '#default_value' => isset($popup_settings['show_disagree_button']) ? $popup_settings['show_disagree_button'] : TRUE,
   );
 
   $form['popup_message']['eu_cookie_compliance']['popup_disagree_button_message'] = array(
     '#type' => 'textfield',
-    '#title' => t('Disagree button label'),
+    '#title' => t('Cookie policy button label'),
     '#default_value' => isset($popup_settings['popup_disagree_button_message']) ? $popup_settings['popup_disagree_button_message'] : t('No, give me more info'),
     '#size' => 30,
     '#states' => array(
@@ -344,7 +344,7 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
 
   $form['advanced']['eu_cookie_compliance']['disagree_do_not_show_popup'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Do not show cookie policy when the user clicks the “Disagree” button.'),
+    '#title' => t('Do not show cookie policy when the user clicks the “Cookie policy” button.'),
     '#default_value' => isset($popup_settings['disagree_do_not_show_popup']) ? $popup_settings['disagree_do_not_show_popup'] : 0,
     '#description' => t('Enabling this will make it possible to record the fact that the user disagrees without the user having to see the privacy policy.'),
   );
