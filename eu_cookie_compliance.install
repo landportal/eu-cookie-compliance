@@ -114,8 +114,15 @@ function eu_cookie_compliance_update_7002(&$sandbox) {
 }
 
 /**
- * Clear caches to initialize new module settings.
+ * Clear cache for only the settings of this module, to initialize new module settings.
  */
 function eu_cookie_compliance_update_7003(&$sandbox) {
+  eu_cookie_compliance_clear_caches();
+}
+
+/**
+ * Version 1.21. Clear cache for only the settings of this module.
+ */
+function eu_cookie_compliance_update_7004(&$sandbox) {
   eu_cookie_compliance_clear_caches();
 }
