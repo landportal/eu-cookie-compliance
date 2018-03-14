@@ -175,7 +175,7 @@
   };
 
   Drupal.eu_cookie_compliance.getCurrentStatus = function () {
-    var cookieName = (Drupal.settings.eu_cookie_compliance.cookie_name === '') ? 'cookie-agreed' : Drupal.settings.eu_cookie_compliance.cookie_name;
+    var cookieName = (typeof Drupal.settings.eu_cookie_compliance.cookie_name === 'undefined' || Drupal.settings.eu_cookie_compliance.cookie_name === '') ? 'cookie-agreed' : Drupal.settings.eu_cookie_compliance.cookie_name;
     var value = $.cookie(cookieName);
     value = parseInt(value);
     if (isNaN(value)) {
@@ -223,7 +223,7 @@
     var date = new Date();
     var domain = Drupal.settings.eu_cookie_compliance.domain ? Drupal.settings.eu_cookie_compliance.domain : '';
     var path = Drupal.settings.basePath;
-    var cookieName = (Drupal.settings.eu_cookie_compliance.cookie_name === '') ? 'cookie-agreed' : Drupal.settings.eu_cookie_compliance.cookie_name;
+    var cookieName = (typeof Drupal.settings.eu_cookie_compliance.cookie_name === 'undefined' || Drupal.settings.eu_cookie_compliance.cookie_name === '') ? 'cookie-agreed' : Drupal.settings.eu_cookie_compliance.cookie_name;
     if (path.length > 1) {
       var pathEnd = path.length - 1;
       if (path.lastIndexOf('/') === pathEnd) {
@@ -272,7 +272,7 @@
     var path = Drupal.settings.basePath;
     var cookie = $.cookie(legacyCookie);
     var date = new Date();
-    var cookieName = (Drupal.settings.eu_cookie_compliance.cookie_name === '') ? 'cookie-agreed' : Drupal.settings.eu_cookie_compliance.cookie_name;
+    var cookieName = (typeof Drupal.settings.eu_cookie_compliance.cookie_name === 'undefined' || Drupal.settings.eu_cookie_compliance.cookie_name === '') ? 'cookie-agreed' : Drupal.settings.eu_cookie_compliance.cookie_name;
 
 
     // jQuery.cookie 1.0 (bundled with Drupal) returns null,
