@@ -9,9 +9,15 @@
  * Implements hook_install().
  */
 function eu_cookie_compliance_install() {
+
   $default_filter_format = filter_default_format();
   if ($default_filter_format == 'filtered_html') {
     $default_filter_format = 'full_html';
+  }
+
+  $cookie_policy = _eu_cookie_compliance_find_privacy_policy();
+  if (!$cookie_policy) {
+    $cookie_policy = '<front>';
   }
 
   $popup_settings = array(
@@ -31,7 +37,7 @@ function eu_cookie_compliance_install() {
     'popup_height' => '',
     'popup_width' => '100%',
     'popup_delay' => 1000,
-    'popup_link' => '<front>',
+    'popup_link' => $cookie_policy,
     'fixed_top_position' => TRUE,
   );
   variable_set('eu_cookie_compliance', $popup_settings);
