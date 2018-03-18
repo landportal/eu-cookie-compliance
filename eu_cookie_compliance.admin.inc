@@ -28,13 +28,46 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
   );
 
   $form['eu_cookie_compliance']['info'] = array(
-    '#markup' => t('<p><strong>Note:</strong> <ul><li>The permission “Display EU Cookie Compliance banner” needs to be enabled for Anonymous and Authenticated users in order for the banner to appear.</li><li>In order for the module to work, <code>$scripts</code> needs to be output before <code>$page_bottom</code> in your <code>html.tpl.php</code>.</li></ul></p>'),
+    '#markup' => t('<p><strong>Note:</strong> In order for the module to work, <code>$scripts</code> needs to be output before <code>$page_bottom</code> in your <code>html.tpl.php</code>.</p>'),
   );
 
   $form['eu_cookie_compliance']['popup_enabled'] = array(
     '#type' => 'checkbox',
     '#title' => t('Enable banner'),
     '#default_value' => isset($popup_settings['popup_enabled']) ? $popup_settings['popup_enabled'] : 0,
+  );
+
+  $role_values = array();
+
+  $permission = 'display EU Cookie Compliance popup';
+
+  $roles = user_roles();
+  $role_permissions = user_role_permissions($roles);
+  foreach ($roles as $rid => $role_name) {
+    // Indicate whether the checkbox should be ticked.
+    if (array_key_exists($permission, $role_permissions[$rid])) {
+      $role_values[] = $rid;
+    }
+  }
+
+  // Store $role_names for use when saving the data.
+  $form['role_names'] = array(
+    '#type' => 'value',
+    '#value' => $roles,
+  );
+
+  $form['permissions'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Permissions'),
+    '#collapsible' => TRUE,
+    '#collapsed' => FALSE,
+  );
+
+  $form['permissions']['see_the_banner'] = array(
+    '#type' => 'checkboxes',
+    '#title' => t('Display the banner for'),
+    '#options' => $roles,
+    '#default_value' => $role_values,
   );
 
   $form['popup_message'] = array(
@@ -436,7 +469,10 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     '#description' => t('Enable this if you want to place the banner as the first HTML element on the page. This will make it possible for screen readers to close the banner without tabbing through all links on the page.'),
   );
 
-  return system_settings_form($form);
+  $form = system_settings_form($form);
+  $form['#submit'][] = 'eu_cookie_compliance_admin_form_submit';
+
+  return $form;
 }
 
 /**
@@ -473,6 +509,27 @@ function eu_cookie_compliance_admin_form_validate($form, &$form_state) {
   }
 
   eu_cookie_compliance_clear_caches();
+}
+
+/**
+ * Submit handler for cookie control banner.
+ *
+ * @param array $form
+ *   Form array.
+ * @param array $form_state
+ *   Form state array.
+ */
+function eu_cookie_compliance_admin_form_submit($form, &$form_state) {
+  $permission = 'display EU Cookie Compliance popup';
+  $roles = $form_state['values']['see_the_banner'];
+  foreach ($roles as $rid => $value) {
+    if ($value) {
+      user_role_grant_permissions($rid, array($permission));
+    }
+    else {
+      user_role_revoke_permissions($rid, array($permission));
+    }
+  }
 }
 
 /**
