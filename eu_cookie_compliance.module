@@ -215,6 +215,10 @@ function eu_cookie_compliance_page_build(&$page) {
 
     $script_scope = isset($popup_settings['script_scope']) ? $popup_settings['script_scope'] : 'footer';
 
+    // Add the cookie name inline, since Drupal.settings will not be available
+    // if the script is loaded in the header.
+    drupal_add_js('var eu_cookie_compliance_cookie_name = "' . (!empty($popup_settings['cookie_name']) ? $popup_settings['cookie_name'] : '') . '";', array('type' => 'inline', 'scope' => $script_scope));
+
     drupal_add_js(array('eu_cookie_compliance' => $data['variables']), array('type' => 'setting', 'scope' => $script_scope));
     if (!isset($popup_settings['use_bare_css']) || $popup_settings['use_bare_css'] == 0) {
       drupal_add_css(drupal_get_path('module', 'eu_cookie_compliance') . '/css/eu_cookie_compliance.css');
