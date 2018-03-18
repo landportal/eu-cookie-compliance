@@ -270,6 +270,20 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     $form_color_picker_type = 'jquery_colorpicker';
   }
 
+  $popup_position_options = array(
+    'bottom' => 'Bottom',
+    'top' => 'Top',
+  );
+
+  $popup_position_value = ($popup_settings['popup_position'] === TRUE ? 'top' : ($popup_settings['popup_position'] === FALSE ? 'bottom' : $popup_settings['popup_position']));
+
+  $form['appearance']['eu_cookie_compliance']['popup_position'] = array(
+    '#type' => 'radios',
+    '#title' => t('Position'),
+    '#default_value' => $popup_position_value,
+    '#options' => $popup_position_options,
+  );
+
   $form['appearance']['eu_cookie_compliance']['use_bare_css'] = array(
     '#type' => 'checkbox',
     '#title' => t('Include minimal CSS, I want to style the banner in the theme CSS.'),
@@ -334,6 +348,38 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     ),
   );
 
+  $form['eu_only'] = array(
+    '#type' => 'fieldset',
+    '#collapsible' => TRUE,
+    '#collapsed' => FALSE,
+    '#title' => t('EU countries'),
+  );
+
+  $form['eu_only']['eu_cookie_compliance'] = array(
+    '#type' => 'item',
+    '#tree' => TRUE,
+  );
+
+  if (module_exists('geoip') || module_exists('smart_ip') || extension_loaded('geoip')) {
+    $form['eu_only']['eu_cookie_compliance']['eu_only'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Only display banner in EU countries'),
+      '#default_value' => isset($popup_settings['eu_only']) ? $popup_settings['eu_only'] : 0,
+      '#description' => t('You can limit the number of countries for which the banner is displayed by checking this option. If you want to provide a list of countries other than current EU states, you may place an array in <code>$conf[\'eu_cookie_compliance_eu_countries\']</code> in your <code>settings.php</code> file. Using the <a href="http://drupal.org/project/geoip">geoip</a> module or the <a href="http://drupal.org/project/smart_ip">smart_ip</a> module or the <a href="http://www.php.net/manual/fr/function.geoip-country-code-by-name.php">geoip_country_code_by_name()</a> PHP function.'),
+    );
+    $form['eu_only']['eu_cookie_compliance']['eu_only_js'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('JavaScript-based (for Varnish): Only display banner in EU countries'),
+      '#default_value' => isset($popup_settings['eu_only_js']) ? $popup_settings['eu_only_js'] : 0,
+      '#description' => t('This option also works for visitors that bypass Varnish. You can limit the number of countries for which the banner is displayed by checking this option. If you want to provide a list of countries other than current EU states, you may place an array in <code>$conf[\'eu_cookie_compliance_eu_countries\']</code> in your <code>settings.php</code> file. Using the <a href="http://drupal.org/project/geoip">geoip</a> module or the <a href="http://drupal.org/project/smart_ip">smart_ip</a> module or the <a href="http://www.php.net/manual/fr/function.geoip-country-code-by-name.php">geoip_country_code_by_name()</a> PHP function.'),
+    );
+  }
+  else {
+    $form['eu_only']['info'] = array(
+      '#markup' => t('You can choose to show the banner only to visitors from EU countries. In order to achieve this, you need to install the <a href="http://drupal.org/project/geoip">geoip</a> module or the <a href="http://drupal.org/project/smart_ip">smart_ip</a> module or enable the <a href="http://www.php.net/manual/fr/function.geoip-country-code-by-name.php">geoip_country_code_by_name()</a> PHP function.'),
+    );
+  }
+
   $form['advanced'] = array(
     '#type' => 'fieldset',
     '#collapsible' => TRUE,
@@ -346,34 +392,12 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     '#tree' => TRUE,
   );
 
-  $form['advanced']['eu_cookie_compliance']['popup_position'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Place the banner at the top of the website'),
-    '#default_value' => isset($popup_settings['popup_position']) ? $popup_settings['popup_position'] : 0,
-    '#description' => t('By default the banner appears at the bottom of the website. Tick this box if you want it to appear at the top.'),
-  );
-
   $form['advanced']['eu_cookie_compliance']['fixed_top_position'] = array(
     '#type' => 'checkbox',
     '#title' => t('If the banner is at the top, don’t scroll the banner with the page'),
     '#default_value' => isset($popup_settings['fixed_top_position']) ? $popup_settings['fixed_top_position'] : 0,
     '#description' => t('Use position:fixed for the banner when displayed at the top.'),
   );
-
-  if (module_exists('geoip') || module_exists('smart_ip') || extension_loaded('geoip')) {
-    $form['advanced']['eu_cookie_compliance']['eu_only'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Only display banner in EU countries'),
-      '#default_value' => isset($popup_settings['eu_only']) ? $popup_settings['eu_only'] : 0,
-      '#description' => t('You can limit the number of countries for which the banner is displayed by checking this option. If you want to provide a list of countries other than current EU states, you may place an array in <code>$conf[\'eu_cookie_compliance_eu_countries\']</code> in your <code>settings.php</code> file. Using the <a href="http://drupal.org/project/geoip">geoip</a> module or the <a href="http://drupal.org/project/smart_ip">smart_ip</a> module or the <a href="http://www.php.net/manual/fr/function.geoip-country-code-by-name.php">geoip_country_code_by_name()</a> PHP function.'),
-    );
-    $form['advanced']['eu_cookie_compliance']['eu_only_js'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('JavaScript-based (for Varnish): Only display banner in EU countries'),
-      '#default_value' => isset($popup_settings['eu_only_js']) ? $popup_settings['eu_only_js'] : 0,
-      '#description' => t('This option also works for visitors that bypass Varnish. You can limit the number of countries for which the banner is displayed by checking this option. If you want to provide a list of countries other than current EU states, you may place an array in <code>$conf[\'eu_cookie_compliance_eu_countries\']</code> in your <code>settings.php</code> file. Using the <a href="http://drupal.org/project/geoip">geoip</a> module or the <a href="http://drupal.org/project/smart_ip">smart_ip</a> module or the <a href="http://www.php.net/manual/fr/function.geoip-country-code-by-name.php">geoip_country_code_by_name()</a> PHP function.'),
-    );
-  }
 
   $form['advanced']['eu_cookie_compliance']['popup_delay'] = array(
     '#type' => 'textfield',
@@ -521,6 +545,14 @@ function eu_cookie_compliance_admin_form_validate($form, &$form_state) {
 
   if ($popup_link == '<front>' && $form_state['values']['eu_cookie_compliance']['show_disagree_button']) {
     drupal_set_message(t('Your privacy policy link is pointing at the front page. This is the default value after installation, and unless your privacy policy is actually posted at the front page, you will need to create a separate page for the privacy policy and link to that page.'), 'error');
+  }
+
+  // Handle legacy settings for popup_position:
+  if ($form_state['values']['eu_cookie_compliance']['popup_position'] == 'top') {
+    $form_state['values']['eu_cookie_compliance']['popup_position'] = TRUE;
+  }
+  elseif ($form_state['values']['eu_cookie_compliance']['popup_position'] == 'bottom') {
+    $form_state['values']['eu_cookie_compliance']['popup_position'] = FALSE;
   }
 
   eu_cookie_compliance_clear_caches();

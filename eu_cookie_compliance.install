@@ -32,6 +32,7 @@ function eu_cookie_compliance_install() {
     'popup_width' => '100%',
     'popup_delay' => 1000,
     'popup_link' => '<front>',
+    'fixed_top_position' => TRUE,
   );
   variable_set('eu_cookie_compliance', $popup_settings);
 
