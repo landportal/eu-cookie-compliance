@@ -58,7 +58,7 @@ function eu_cookie_compliance_requirements($phase) {
   $requirements = array();
   $settings = variable_get('eu_cookie_compliance');
 
-  if ($settings['popup_link'] == '<front>') {
+  if ($settings['popup_link'] == '<front>' && $settings['show_disagree_button']) {
     $requirements['eu_cookie_compliance'] = array(
       'title' => t('EU Cookie Compliance'),
       'severity' => REQUIREMENT_ERROR,
