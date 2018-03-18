@@ -519,6 +519,10 @@ function eu_cookie_compliance_admin_form_validate($form, &$form_state) {
     form_set_error('eu_cookie_compliance][popup_link', t('Looks like your privacy policy link contains a fragment #. You should make this an absolute url, e.g. @link', array('@link' => $popup_link)));
   }
 
+  if ($popup_link == '<front>') {
+    drupal_set_message(t('Your privacy policy link is pointing at the front page. This is the default value after installation, and unless your privacy policy is actually posted at the front page, you will need to create a separate page for the privacy policy and link to that page.'), 'error');
+  }
+
   eu_cookie_compliance_clear_caches();
 }
 
