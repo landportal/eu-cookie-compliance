@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Documentation for the EU Cookie Compliance module.
@@ -12,7 +13,8 @@
  * @defgroup EU Cookie Compliance hooks
  *
  * @{
- * Hooks that can be implemented to externally extend the EU Cookie Compliance module.
+ * Hooks that can be implemented to externally extend the EU Cookie Compliance
+ * module.
  */
 
 /**
@@ -28,7 +30,7 @@ function hook_eu_cookie_compliance_geoip_match_alter(&$geoip_match) {
 /**
  * Take control of EU Cookie Compliance path exclusion.
  *
- * @param boolean $excluded
+ * @param bool $excluded
  *   Whether this path is excluded from cookie compliance behavior.
  * @param string $path
  *   Current string path.
@@ -45,7 +47,7 @@ function hook_eu_cookie_compliance_path_match_alter(&$excluded, $path, $setting)
 /**
  * Alter hook to provide advanced logic for hiding the banner.
  *
- * @param boolean $show_popup
+ * @param bool $show_popup
  *   Whether to show the banner.
  */
 function hook_eu_cookie_compliance_show_popup_alter(&$show_popup) {

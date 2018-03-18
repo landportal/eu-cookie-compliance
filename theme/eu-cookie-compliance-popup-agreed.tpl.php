@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * This is a template file for a pop-up informing a user that he has already
@@ -11,8 +12,8 @@
  * find-more-button  - link to an information page
  *
  * Variables available:
- * - $message:  Contains the text that will be display whithin the pop-up
- * - $hide_button: Contains hide butlon title
+ * - $message:  Contains the text that will be display within the pop-up
+ * - $hide_button: Contains hide button title
  * - $find_more_button: Contains find more button title
  */
 ?>

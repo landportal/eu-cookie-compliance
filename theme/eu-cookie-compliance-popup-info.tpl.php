@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * This is a template file for a pop-up prompting user to give their consent for
@@ -11,7 +12,7 @@
  * find-more-button  - link to an information page
  *
  * Variables available:
- * - $message:  Contains the text that will be display whithin the pop-up
+ * - $message:  Contains the text that will be display within the pop-up
  * - $agree_button: Contains agree button title
  * - $disagree_button: Contains Cookie policy button title
  */

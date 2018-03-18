@@ -50,8 +50,7 @@
           // Detect mobile here and use mobile_popup_html_info, if we have a mobile device.
           if (window.matchMedia('(max-width: ' + Drupal.settings.eu_cookie_compliance.mobile_breakpoint + 'px)').matches && Drupal.settings.eu_cookie_compliance.use_mobile_message) {
             Drupal.eu_cookie_compliance.createPopup(Drupal.settings.eu_cookie_compliance.mobile_popup_html_info);
-          }
-          else {
+          } else {
             Drupal.eu_cookie_compliance.createPopup(Drupal.settings.eu_cookie_compliance.popup_html_info);
           }
 
@@ -273,7 +272,6 @@
     var cookie = $.cookie(legacyCookie);
     var date = new Date();
     var cookieName = (typeof eu_cookie_compliance_cookie_name === 'undefined' || eu_cookie_compliance_cookie_name === '') ? 'cookie-agreed' : eu_cookie_compliance_cookie_name;
-
 
     // jQuery.cookie 1.0 (bundled with Drupal) returns null,
     // jQuery.cookie 1.4.1 (bundled with some themes) returns undefined.

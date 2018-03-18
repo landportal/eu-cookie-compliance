@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * EU cookie compliance primary module file.
@@ -49,7 +50,7 @@ function eu_cookie_compliance_page_build(&$page) {
   $popup_settings = eu_cookie_compliance_get_settings();
   global $theme, $user;
 
-  // Check Add/Remove domains
+  // Check Add/Remove domains.
   $domain_allow = TRUE;
   $domain_option = isset($popup_settings['domains_option']) ? $popup_settings['domains_option'] : 1;
   if (!empty($popup_settings['domains_list'])) {
@@ -111,7 +112,7 @@ function eu_cookie_compliance_page_build(&$page) {
       $cid = 'eu_cookie_compliance_client_settings:' . $language->language . ':' . $theme;
     }
     $data = array();
-    if($cache = cache_get($cid, 'cache')) {
+    if ($cache = cache_get($cid, 'cache')) {
       $data = $cache->data;
     }
     else {
@@ -172,7 +173,7 @@ function eu_cookie_compliance_page_build(&$page) {
         $html_agreed = preg_replace('/<!--(.|\s)*?-->/', '', $html_agreed);
       }
       $clicking_confirmation = (isset($popup_settings['popup_clicking_confirmation'])) ? $popup_settings['popup_clicking_confirmation'] : TRUE;
-      $scrolling_confirmation = (isset($popup_settings['popup_scrolling_confirmation']))? $popup_settings['popup_scrolling_confirmation'] : FALSE;
+      $scrolling_confirmation = (isset($popup_settings['popup_scrolling_confirmation'])) ? $popup_settings['popup_scrolling_confirmation'] : FALSE;
       $data['variables'] = array(
         'popup_enabled' => $popup_settings['popup_enabled'],
         'popup_agreed_enabled' => $popup_settings['popup_agreed_enabled'],
@@ -340,6 +341,9 @@ function eu_cookie_compliance_user_in_eu() {
   );
 }
 
+/**
+ * Clear cache for the eu_cookie_compliance settings.
+ */
 function eu_cookie_compliance_clear_caches() {
   $use_domain = FALSE;
   if (module_exists('domain')) {
@@ -358,7 +362,7 @@ function eu_cookie_compliance_clear_caches() {
         $current_language = !empty($language->language) ? $language->language : 'en';
         $languages = array($current_language => $current_language);
       }
-      foreach($languages as $key => $current_language) {
+      foreach ($languages as $key => $current_language) {
         if ($use_domain) {
           foreach ($domains as $domain) {
             cache_clear_all('eu_cookie_compliance_client_settings:' . $key . ':' . $theme->name . ':' . $domain['domain_id'], 'cache', TRUE);
