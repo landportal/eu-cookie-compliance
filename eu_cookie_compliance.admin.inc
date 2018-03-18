@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * This file provides administration form for the module.
@@ -8,9 +9,12 @@
  * Provides form for cookie control banner.
  *
  * @param array $form
+ *   Form array.
  * @param array $form_state
+ *   For state array.
  *
- * @return mixed
+ * @return array
+ *   Admin form render array.
  */
 function eu_cookie_compliance_admin_form($form, $form_state) {
   $form = array();
@@ -100,12 +104,12 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
   $form['popup_message']['eu_cookie_compliance']['use_mobile_message'] = array(
     '#type' => 'checkbox',
     '#title' => t('Use a different message for mobile phones'),
-    '#default_value' =>  isset($popup_settings['use_mobile_message']) ? $popup_settings['use_mobile_message'] : 0,
+    '#default_value' => isset($popup_settings['use_mobile_message']) ? $popup_settings['use_mobile_message'] : 0,
   );
 
   $form['popup_message']['eu_cookie_compliance']['container'] = array(
     '#type' => 'container',
-    '#states' => array('visible' => array('input[name="eu_cookie_compliance[use_mobile_message]"]' => array('checked' => true))),
+    '#states' => array('visible' => array('input[name="eu_cookie_compliance[use_mobile_message]"]' => array('checked' => TRUE))),
   );
 
   $form['popup_message']['eu_cookie_compliance']['container']['mobile_popup_info'] = array(
@@ -128,7 +132,8 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     '#description' => t('The mobile message will be used when the window width is below or equal to the given value.'),
     '#states' => array(
       'visible' => array(
-        "input[name='eu_cookie_compliance[use_mobile_message]']" => array('checked' => TRUE)),
+        "input[name='eu_cookie_compliance[use_mobile_message]']" => array('checked' => TRUE),
+      ),
     ),
   );
 
@@ -280,7 +285,8 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     '#element_validate' => array('eu_cookie_compliance_validate_hex'),
     '#states' => array(
       'visible' => array(
-        "input[name='eu_cookie_compliance[use_bare_css]']" => array('checked' => FALSE)),
+        "input[name='eu_cookie_compliance[use_bare_css]']" => array('checked' => FALSE),
+      ),
     ),
   );
 
@@ -288,12 +294,13 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     '#type' => $form_color_picker_type,
     '#title' => t('Background Color'),
     // Garland colors => 0779BF.
-    '#default_value' => isset($popup_settings['popup_bg_hex']) ? check_plain($popup_settings['popup_bg_hex']) : '0779BF',
+    '#default_value' => isset($popup_settings['popup_bg_hex']) ? check_plain($popup_settings['popup_bg_hex']) : '0779bf',
     '#description' => t('Change the background color of the banner. Provide HEX value without the #.'),
     '#element_validate' => array('eu_cookie_compliance_validate_hex'),
     '#states' => array(
       'visible' => array(
-        "input[name='eu_cookie_compliance[use_bare_css]']" => array('checked' => FALSE)),
+        "input[name='eu_cookie_compliance[use_bare_css]']" => array('checked' => FALSE),
+      ),
     ),
   );
 
@@ -307,7 +314,8 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     '#description' => t('Enter an integer value for a desired height in pixels or leave empty for automatically adjusted height. Do not set this value if you are using responsive theme.'),
     '#states' => array(
       'visible' => array(
-        "input[name='eu_cookie_compliance[use_bare_css]']" => array('checked' => FALSE)),
+        "input[name='eu_cookie_compliance[use_bare_css]']" => array('checked' => FALSE),
+      ),
     ),
   );
 
@@ -321,7 +329,8 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     '#description' => t('Set the width of the banner. This can be either an integer value or percentage of the screen width. For example: 200 or 50%.'),
     '#states' => array(
       'visible' => array(
-        "input[name='eu_cookie_compliance[use_bare_css]']" => array('checked' => FALSE)),
+        "input[name='eu_cookie_compliance[use_bare_css]']" => array('checked' => FALSE),
+      ),
     ),
   );
 
@@ -479,7 +488,9 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
  * Validates form for cookie control banner.
  *
  * @param array $form
+ *   Form array.
  * @param array $form_state
+ *   Form state array.
  */
 function eu_cookie_compliance_admin_form_validate($form, &$form_state) {
   if ((!preg_match('/^[1-9][0-9]{0,4}$/', $form_state['values']['eu_cookie_compliance']['popup_delay'])) && ($form_state['values']['eu_cookie_compliance']['popup_delay'] != '0')) {
@@ -536,7 +547,9 @@ function eu_cookie_compliance_admin_form_submit($form, &$form_state) {
  * Validate field for a HEX value if a value is set.
  *
  * @param array $element
+ *   Form element.
  * @param array $form_state
+ *   Form state array.
  */
 function eu_cookie_compliance_validate_hex($element, &$form_state) {
   if (!empty($element['#value']) && !preg_match('/^[0-9a-fA-F]{3,6}$/', $element['#value'])) {
