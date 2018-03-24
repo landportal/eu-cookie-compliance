@@ -385,9 +385,32 @@ function eu_cookie_compliance_clear_caches() {
 function _eu_cookie_compliance_find_privacy_policy() {
   $pattern = 'privacy|privacy +policy|cookie +policy|terms +of +use|terms +of +service|terms +and +conditions';
 
+  $database_type = $GLOBALS['databases']['default']['default']['driver'];
+  // Select operator based on the database type.
+  switch ($database_type) {
+    case 'pgsql':
+      $op = '~*';
+      break;
+
+    case 'sqlite':
+      $op = 'REGEXP';
+      // The regexp function is not defined in SQLite for Drupal 7.
+      Database::getConnection('default')->sqliteCreateFunction('REGEXP',
+        function ($pattern, $data, $delimiter = '~', $modifiers = 'isuS') {
+          if (isset($pattern, $data) === TRUE) {
+            return (preg_match(sprintf('%1$s%2$s%1$s%3$s', $delimiter, $pattern, $modifiers), $data) > 0);
+          }
+          return NULL;
+        });
+      break;
+
+    default:
+      $op = 'RLIKE';
+  }
+
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'node')
-    ->propertyCondition('title', $pattern, 'RLIKE');
+    ->propertyCondition('title', $pattern, $op);
 
   $result = $query->execute();
   if (isset($result['node'])) {
