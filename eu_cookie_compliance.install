@@ -172,3 +172,15 @@ function eu_cookie_compliance_update_7003(&$sandbox) {
 function eu_cookie_compliance_update_7004(&$sandbox) {
   eu_cookie_compliance_clear_caches();
 }
+
+/**
+ * Version 1.24. Add new settings.
+ */
+function eu_cookie_compliance_update_7005(&$sandbox) {
+  $eu_cookie_settings = variable_get('eu_cookie_compliance');
+  $eu_cookie_settings['method'] = 'default';
+  $eu_cookie_settings['disagree_button_label'] = 'No, thanks';
+  $eu_cookie_settings['disabled_javascripts'] = '';
+  $eu_cookie_settings['whitelisted_cookies'] = '';
+  variable_set('eu_cookie_compliance', $eu_cookie_settings);
+}

@@ -24,7 +24,7 @@
   max-width: 40%;
 }
 
-#sliding-popup .popup-content #popup-buttons button {
+#sliding-popup button {
   cursor: pointer;
 }
 
