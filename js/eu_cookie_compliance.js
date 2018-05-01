@@ -247,6 +247,12 @@
     date.setDate(date.getDate() + parseInt(Drupal.settings.eu_cookie_compliance.cookie_lifetime));
     $.cookie(cookieName, status, { expires: date, path: path, domain: domain });
     $(document).trigger('eu_cookie_compliance.changeStatus', [status]);
+
+    // Store consent if applicable.
+    if (Drupal.settings.eu_cookie_compliance.store_consent && ((status === 1 && Drupal.settings.eu_cookie_compliance.popup_agreed_enabled) || (status === 2  && !Drupal.settings.eu_cookie_compliance.popup_agreed_enabled))) {
+      var url = Drupal.settings.basePath + 'eu-cookie-compliance/store_consent/banner';
+      $.getJSON(url, {}, function (data) { });
+    }
   };
 
   Drupal.eu_cookie_compliance.hasAgreed = function () {

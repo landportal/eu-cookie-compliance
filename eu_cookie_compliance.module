@@ -22,6 +22,13 @@ function eu_cookie_compliance_menu() {
     'access arguments' => array('administer EU Cookie Compliance popup'),
     'file' => 'eu_cookie_compliance.admin.inc',
   );
+  $items['eu-cookie-compliance/store_consent/%'] = array(
+    'title' => 'EU Cookie Compliance STore Consent',
+    'page callback' => 'eu_cookie_compliance_store_consent',
+    'page arguments' => array(2),
+    'access arguments' => array('display EU Cookie Compliance popup'),
+    'type' => MENU_CALLBACK,
+  );
   if (module_exists('geoip') || module_exists('smart_ip') || extension_loaded('geoip')) {
     $items['eu-cookie-compliance-check'] = array(
       'title' => 'Check if visit is in EU',
@@ -32,6 +39,24 @@ function eu_cookie_compliance_menu() {
   }
 
   return $items;
+}
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ */
+function eu_cookie_compliance_ctools_plugin_directory($module, $plugin) {
+  if ($module == 'eu_cookie_compliance' && !empty($plugin)) {
+    return 'plugins/' . $plugin;
+  }
+}
+
+/**
+ * Implements hook_ctools_plugin_type().
+ */
+function eu_cookie_compliance_ctools_plugin_type() {
+  $plugins = array();
+  $plugins['consent_storage'] = array();
+  return $plugins;
 }
 
 /**
@@ -239,6 +264,7 @@ function eu_cookie_compliance_page_build(&$page) {
         'popup_link_new_window' => isset($popup_settings['popup_link_new_window']) ? $popup_settings['popup_link_new_window'] : 1,
         'popup_position' => empty($popup_settings['popup_position']) ? NULL : $popup_settings['popup_position'],
         'popup_language' => $language->language,
+        'store_consent' => $popup_settings['consent_storage_method'] != 'do_not_store',
         'better_support_for_screen_readers' => isset($popup_settings['better_support_for_screen_readers']) ? $popup_settings['better_support_for_screen_readers'] : 0,
         'reload_page' => isset($popup_settings['reload_page']) ? $popup_settings['reload_page'] : 0,
         'domain' => variable_get('eu_cookie_compliance_domain', ''),
@@ -537,4 +563,53 @@ function _eu_cookie_compliance_find_privacy_policy() {
     return ('node/' . array_shift($nodes));
   }
   return FALSE;
+}
+
+/**
+ * Lookup the latest revision of the privacy policy node (if present).
+ *
+ * @return int|bool
+ */
+function _eu_cookie_compliance_get_current_policy_node_revision() {
+  $cookie_policy_path = eu_cookie_compliance_get_settings('popup_link');
+  $drupal_path = drupal_get_normal_path($cookie_policy_path);
+  if (substr($drupal_path, 0, 5) == 'node/') {
+    $drupal_path = explode('/', $drupal_path);
+    $cookie_policy_node_id = $drupal_path[1];
+    $cookie_policy_node = node_load($cookie_policy_node_id);
+    if (!empty($cookie_policy_node)) {
+      return $cookie_policy_node->vid;
+    }
+    else {
+      return FALSE;
+    }
+  }
+  else {
+    return FALSE;
+  }
+}
+
+/**
+ * Callback for the consent storage JSON call.
+ *
+ * @param string $type
+ *   The type of consent. 'banner' or form ID.
+ */
+function eu_cookie_compliance_store_consent($type) {
+  ctools_include('plugins');
+
+  $type = check_plain($type);
+  $consent_storage_method = eu_cookie_compliance_get_settings('consent_storage_method');
+  if ($consent_storage_method == 'do_not_store') {
+    drupal_json_output(NULL);
+    drupal_exit();
+  }
+
+  // Get plugin.
+  $consent_storage_plugin = ctools_get_plugins('eu_cookie_compliance', 'consent_storage', $consent_storage_method);
+  $consent_storage_function = $consent_storage_plugin['consent_storage_callback'];
+  $result = $consent_storage_function($type);
+
+  drupal_json_output($result);
+  drupal_exit();
 }

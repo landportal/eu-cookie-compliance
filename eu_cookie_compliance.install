@@ -6,6 +6,67 @@
  */
 
 /**
+ * Implements hook_schema().
+ */
+function eu_cookie_compliance_schema() {
+  $schema['eu_cookie_compliance_basic_consent'] = array(
+    'description' => 'Basic consent storage for EU Cookie Compliance / GDPR.',
+    'fields' => array(
+      'cid' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique consent storage ID.',
+      ),
+      'uid' => array(
+        'description' => '{users}.uid for user.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'timestamp' => array(
+        'description' => 'Time of consent.',
+        'type' => 'int',
+        'unsigned' => FALSE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'ip_address' => array(
+        'description' => 'The IP address.',
+        'type' => 'varchar',
+        // Maximum length of an ipv6 IP address.
+        'length' => 45,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'consent_type' => array(
+        'description' => 'The type of consent, such as "banner" for the banner and form_id for forms.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'revision_id' => array(
+        'description' => 'Revision of the privacy policy at the time of consent.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('cid'),
+    'indexes' => array(
+      'uid' => array('uid'),
+    ),
+    'foreign keys' => array(
+      'uid' => array('users' => 'uid'),
+    ),
+  );
+
+  return $schema;
+}
+
+/**
  * Implements hook_install().
  */
 function eu_cookie_compliance_install() {
@@ -183,4 +244,16 @@ function eu_cookie_compliance_update_7005(&$sandbox) {
   $eu_cookie_settings['disabled_javascripts'] = '';
   $eu_cookie_settings['whitelisted_cookies'] = '';
   variable_set('eu_cookie_compliance', $eu_cookie_settings);
+}
+
+/**
+ * Version 1.24. Create table for storing consent, and update settings.
+ */
+function eu_cookie_compliance_update_7006(&$sandbox) {
+  $schema = module_invoke('eu_cookie_compliance', 'schema');
+  db_create_table('eu_cookie_compliance_basic_consent', $schema['eu_cookie_compliance_basic_consent']);
+  $eu_cookie_settings = variable_get('eu_cookie_compliance');
+  $eu_cookie_settings['consent_storage_method'] = 'do_not_store';
+  variable_set('eu_cookie_compliance', $eu_cookie_settings);
+  eu_cookie_compliance_clear_caches();
 }

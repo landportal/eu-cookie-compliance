@@ -17,6 +17,8 @@
  *   Admin form render array.
  */
 function eu_cookie_compliance_admin_form($form, $form_state) {
+  ctools_include('plugins');
+
   $form = array();
 
   $popup_settings = eu_cookie_compliance_get_settings();
@@ -24,6 +26,13 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
   $default_filter_format = filter_default_format();
   if ($default_filter_format == 'filtered_html') {
     $default_filter_format = 'full_html';
+  }
+
+  $consent_storage_options = array();
+  $consent_storage_options['do_not_store'] = t('Do not store');
+  $consent_storage_plugins = ctools_get_plugins('eu_cookie_compliance', 'consent_storage');
+  foreach ($consent_storage_plugins as $key => $consent_storage_plugin) {
+    $consent_storage_options[$key] = $consent_storage_plugin['title'];
   }
 
   $form['eu_cookie_compliance'] = array(
@@ -149,6 +158,30 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     '#title' => t('Whitelisted cookies'),
     '#default_value' => isset($popup_settings['whitelisted_cookies']) ? $popup_settings['whitelisted_cookies'] : '',
     '#description' => t('Include the name of cookies, each on a separate line. When using the opt-in or opt-out consent options, this module will <strong>prevent cookies that are not on the whitelist</strong> from being stored in the browser when consent isn’t given. PHP session cookies and the cookie for this module are always whitelisted.'),
+  );
+
+  $form['consent_storage'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Store record of consent'),
+    '#collapsible' => TRUE,
+    '#collapsed' => FALSE,
+  );
+
+  $form['consent_storage']['eu_cookie_compliance'] = array(
+    '#type' => 'item',
+    '#tree' => TRUE,
+  );
+
+  $form['consent_storage']['eu_cookie_compliance']['info'] = array(
+    '#type' => 'markup',
+    '#markup' => t('Depending on your implementation of GDPR, you may have to store a record when the user consents. This module comes with a basic consent storage plugin that writes a record to the database. Note that if your site has significant traffic, the basic consent storage may become a bottleneck, as every consent action will require a write to the database. You can easily create your own module with a consent_storage ctools plugin that implements a consent_storage_callback, using basic.inc from this module as a template. If you create a highly performant consent storage plugin, please consider contributing it back to the Drupal community as a contrib module.'),
+  );
+
+  $form['consent_storage']['eu_cookie_compliance']['consent_storage_method'] = array(
+    '#type' => 'radios',
+    '#title' => t('Consent Storage Method'),
+    '#default_value' => $popup_settings['consent_storage_method'],
+    '#options' => $consent_storage_options,
   );
 
   $form['popup_message'] = array(
