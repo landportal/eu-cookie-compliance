@@ -100,6 +100,8 @@ function eu_cookie_compliance_install() {
     'popup_delay' => 1000,
     'popup_link' => $cookie_policy,
     'fixed_top_position' => TRUE,
+    'consent_storage_method' => 'do_not_store',
+    'disabled_javascripts' => '',
   );
   variable_set('eu_cookie_compliance', $popup_settings);
 
