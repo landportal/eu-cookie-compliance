@@ -321,54 +321,60 @@
   });
 
   // Block cookies when the user hasn't agreed.
-  if ((Drupal.settings.eu_cookie_compliance.method === 'opt_in' && (Drupal.eu_cookie_compliance.getCurrentStatus() === null  || !Drupal.eu_cookie_compliance.hasAgreed()))
-      || (Drupal.settings.eu_cookie_compliance.method === 'opt_out' && !Drupal.eu_cookie_compliance.hasAgreed() && Drupal.eu_cookie_compliance.getCurrentStatus() !== null)
-  ) {
-    // Split the white-listed cookies.
-    var euCookieComplianceWhitelist = Drupal.settings.eu_cookie_compliance.whitelisted_cookies.split(/\r\n|\n|\r/g);
+  Drupal.behaviors.eu_cookie_compliance_popup_block_cookies = {
+    attach: function (context, settings) {
+      $(document).ready(function() {
+        if ((settings.eu_cookie_compliance.method === 'opt_in' && (Drupal.eu_cookie_compliance.getCurrentStatus() === null || !Drupal.eu_cookie_compliance.hasAgreed()))
+          || (settings.eu_cookie_compliance.method === 'opt_out' && !Drupal.eu_cookie_compliance.hasAgreed() && Drupal.eu_cookie_compliance.getCurrentStatus() !== null)
+        ) {
+          // Split the white-listed cookies.
+          var euCookieComplianceWhitelist = settings.eu_cookie_compliance.whitelisted_cookies.split(/\r\n|\n|\r/g);
 
-    // Add the EU Cookie Compliance cookie.
-    euCookieComplianceWhitelist.push((Drupal.settings.eu_cookie_compliance.cookie_name === '') ? 'cookie-agreed' : Drupal.settings.eu_cookie_compliance.cookie_name);
-    var euCookieComplianceBlockCookies = setInterval(function () {
-      // Load all cookies from jQuery.
-      var cookies = $.cookie();
+          // Add the EU Cookie Compliance cookie.
+          euCookieComplianceWhitelist.push((settings.eu_cookie_compliance.cookie_name === '') ? 'cookie-agreed' : settings.eu_cookie_compliance.cookie_name);
+          var euCookieComplianceBlockCookies = setInterval(function () {
+            // Load all cookies from jQuery.
+            var cookies = $.cookie();
 
-      // Check each cookie and try to remove it if it's not white-listed.
-      for (var i in cookies) {
-        var remove = true;
-        var hostname = window.location.hostname;
-        var cookieRemoved = false;
-        var index = 0;
+            // Check each cookie and try to remove it if it's not white-listed.
+            for (var i in cookies) {
+              var remove = true;
+              var hostname = window.location.hostname;
+              var cookieRemoved = false;
+              var index = 0;
 
-        // Skip the PHP session cookie.
-        if (i.indexOf('SESS') === 0 || i.indexOf('SSESS') === 0) {
-          remove = false;
-        }
+              // Skip the PHP session cookie.
+              if (i.indexOf('SESS') === 0 || i.indexOf('SSESS') === 0) {
+                remove = false;
+              }
 
-        // Check if the cookie is white-listed.
-        for (var item in euCookieComplianceWhitelist) {
-          if (i === euCookieComplianceWhitelist[item]) {
-            remove = false;
-          }
-        }
+              // Check if the cookie is white-listed.
+              for (var item in euCookieComplianceWhitelist) {
+                if (i === euCookieComplianceWhitelist[item]) {
+                  remove = false;
+                }
+              }
 
-        // Remove the cookie if it's not white-listed.
-        if (remove) {
-          while (!cookieRemoved && hostname !== '') {
-            // Attempt to remove.
-            cookieRemoved = $.removeCookie(i, { domain: '.' + hostname, path: '/' });
-            if (!cookieRemoved) {
-              cookieRemoved = $.removeCookie(i, { domain: hostname, path: '/' });
+              // Remove the cookie if it's not white-listed.
+              if (remove) {
+                while (!cookieRemoved && hostname !== '') {
+                  // Attempt to remove.
+                  cookieRemoved = $.removeCookie(i, { domain: '.' + hostname, path: '/' });
+                  if (!cookieRemoved) {
+                    cookieRemoved = $.removeCookie(i, { domain: hostname, path: '/' });
+                  }
+
+                  index = hostname.indexOf('.');
+
+                  // We can be on a sub-domain, so keep checking the main domain as well.
+                  hostname = (index === -1) ? '' : hostname.substring(index + 1);
+                }
+              }
             }
-
-            index = hostname.indexOf('.');
-
-            // We can be on a sub-domain, so keep checking the main domain as well.
-            hostname = (index === -1) ? '' : hostname.substring(index + 1);
-          }
+          }, 5000);
         }
-      }
-    }, 5000);
+      });
+    }
   }
 
 })(jQuery);
