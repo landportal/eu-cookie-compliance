@@ -7,7 +7,7 @@
         // If configured, check JSON callback to determine if in EU.
         if (Drupal.settings.eu_cookie_compliance.popup_eu_only_js) {
           if (Drupal.eu_cookie_compliance.showBanner()) {
-            var url = Drupal.settings.basePath + 'eu-cookie-compliance-check';
+            var url = Drupal.settings.basePath + Drupal.settings.pathPrefix + 'eu-cookie-compliance-check';
             var data = {};
             $.getJSON(url, data, function (data) {
               // If in the EU, show the compliance banner.
@@ -250,8 +250,8 @@
 
     // Store consent if applicable.
     if (Drupal.settings.eu_cookie_compliance.store_consent && ((status === 1 && Drupal.settings.eu_cookie_compliance.popup_agreed_enabled) || (status === 2  && !Drupal.settings.eu_cookie_compliance.popup_agreed_enabled))) {
-      var url = Drupal.settings.basePath + 'eu-cookie-compliance/store_consent/banner';
-      $.getJSON(url, {}, function (data) { });
+      var url = Drupal.settings.basePath + Drupal.settings.pathPrefix + 'eu-cookie-compliance/store_consent/banner';
+      $.post(url, {}, function (data) { });
     }
   };
 
