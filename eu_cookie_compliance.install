@@ -72,7 +72,7 @@ function eu_cookie_compliance_schema() {
 function eu_cookie_compliance_install() {
 
   $default_filter_format = filter_default_format();
-  if ($default_filter_format == 'filtered_html') {
+  if ($default_filter_format == 'filtered_html' && filter_format_load('full_html')) {
     $default_filter_format = 'full_html';
   }
 

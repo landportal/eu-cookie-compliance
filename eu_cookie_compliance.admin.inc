@@ -24,7 +24,7 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
   $popup_settings = eu_cookie_compliance_get_settings();
 
   $default_filter_format = filter_default_format();
-  if ($default_filter_format == 'filtered_html') {
+  if ($default_filter_format == 'filtered_html' && filter_format_load('full_html')) {
     $default_filter_format = 'full_html';
   }
 
