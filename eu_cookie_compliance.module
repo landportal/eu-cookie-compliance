@@ -109,7 +109,7 @@ function eu_cookie_compliance_page_build(&$page) {
     $admin_page_match = TRUE;
   }
 
-  $geoip_match = TRUE;
+  $geoip_match = array('in_eu' => TRUE);
   if (isset($popup_settings['eu_only']) && $popup_settings['eu_only']) {
     $geoip_match = eu_cookie_compliance_user_in_eu();
   }
@@ -126,7 +126,7 @@ function eu_cookie_compliance_page_build(&$page) {
   $modules_allow_popup = TRUE;
   drupal_alter('eu_cookie_compliance_show_popup', $modules_allow_popup);
 
-  if (!empty($popup_settings['popup_enabled']) && user_access('display EU Cookie Compliance popup') && $geoip_match && $domain_allow && !$path_match && !$admin_page_match && $uid1_match && $modules_allow_popup) {
+  if (!empty($popup_settings['popup_enabled']) && user_access('display EU Cookie Compliance popup') && $geoip_match['in_eu'] && $domain_allow && !$path_match && !$admin_page_match && $uid1_match && $modules_allow_popup) {
     global $language;
     // Array storage for caching full client data.
     if (module_exists('domain')) {
@@ -398,6 +398,10 @@ function eu_cookie_compliance_get_settings($setting = 'all') {
  */
 function eu_cookie_compliance_json() {
   $data = eu_cookie_compliance_user_in_eu();
+
+  // Allow other modules to alter the geo IP matching logic.
+  drupal_alter('eu_cookie_compliance_geoip_match', $data);
+
   drupal_add_http_header('Cache-Control', 'private');
   drupal_json_output($data);
   drupal_exit();
