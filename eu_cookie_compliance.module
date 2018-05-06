@@ -321,7 +321,7 @@ function eu_cookie_compliance_page_build(&$page) {
       drupal_add_css(drupal_get_path('module', 'eu_cookie_compliance') . '/css/eu_cookie_compliance.bare.css');
     }
     drupal_add_library('system', 'jquery.cookie');
-    drupal_add_js(drupal_get_path('module', 'eu_cookie_compliance') . '/js/eu_cookie_compliance.js', array('type' => 'file', 'scope' => $script_scope));
+    drupal_add_js(drupal_get_path('module', 'eu_cookie_compliance') . '/js/eu_cookie_compliance.js', array('type' => 'file', 'scope' => $script_scope, 'group' => JS_THEME, 'weight' => 100));
   }
 }
 
@@ -493,12 +493,8 @@ function eu_cookie_compliance_library_alter(&$libraries, $module){
   if ($module != 'system') {
     return;
   }
-  $libraries['jquery.cookie'] = array(
-    'js' => array(
-      drupal_get_path('module', 'eu_cookie_compliance') . '/js/jquery.cookie-1.4.1.min.js' => array(),
-    ),
-    'version' => '1.4.1',
-  );
+  $libraries['jquery.cookie']['js']['misc/jquery.cookie.js']['data'] = drupal_get_path('module', 'eu_cookie_compliance') . '/js/jquery.cookie-1.4.1.min.js';
+  $libraries['jquery.cookie']['version'] = '1.4.1';
 }
 
 /**

@@ -3,7 +3,7 @@
 
   Drupal.behaviors.eu_cookie_compliance_popup = {
     attach: function (context, settings) {
-      $('body').once('eu-cookie-compliance', function () {
+      $('body', context).once('eu-cookie-compliance', function () {
         // If configured, check JSON callback to determine if in EU.
         if (Drupal.settings.eu_cookie_compliance.popup_eu_only_js) {
           if (Drupal.eu_cookie_compliance.showBanner()) {
