@@ -482,11 +482,13 @@ function eu_cookie_compliance_clear_caches() {
  */
 function eu_cookie_compliance_js_alter(&$javascript) {
   $popup_settings = eu_cookie_compliance_get_settings();
-  $disabled_javascripts = $popup_settings['disabled_javascripts'];
-  $disabled_javascripts = _eu_cookie_compliance_explode_multiple_lines($disabled_javascripts);
+  if (!empty($popup_settings['disabled_javascripts'])) {
+    $disabled_javascripts = $popup_settings['disabled_javascripts'];
+    $disabled_javascripts = _eu_cookie_compliance_explode_multiple_lines($disabled_javascripts);
 
-  foreach ($disabled_javascripts as $script) {
-    unset($javascript[$script]);
+    foreach ($disabled_javascripts as $script) {
+      unset($javascript[$script]);
+    }
   }
 }
 

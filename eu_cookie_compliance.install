@@ -128,14 +128,12 @@ function eu_cookie_compliance_requirements($phase) {
   $requirements = array();
   $settings = variable_get('eu_cookie_compliance');
 
-  if ($settings['popup_link'] == '<front>' && $settings['show_disagree_button']) {
-    $requirements['eu_cookie_compliance'] = array(
-      'title' => t('EU Cookie Compliance'),
-      'severity' => REQUIREMENT_ERROR,
-      'description' => t('Your privacy policy link is pointing at the front page. This is the default value after installation, and unless your privacy policy is actually posted at the front page, you will need to create a separate page for the privacy policy and link to that page.'),
-    );
-    if ($phase == 'runtime') {
-      $requirements['eu_cookie_compliance'] += array(
+  if ($phase == 'runtime') {
+    if (!empty($settings['popup_link']) && $settings['popup_link'] == '<front>' && !empty($settings['show_disagree_button']) && $settings['show_disagree_button']) {
+      $requirements['eu_cookie_compliance'] = array(
+        'title' => t('EU Cookie Compliance'),
+        'severity' => REQUIREMENT_ERROR,
+        'description' => t('Your privacy policy link is pointing at the front page. This is the default value after installation, and unless your privacy policy is actually posted at the front page, you will need to create a separate page for the privacy policy and link to that page.'),
         'value' => t('Privacy Policy link not provided'),
       );
     }
