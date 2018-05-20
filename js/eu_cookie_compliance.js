@@ -244,8 +244,15 @@
       }
     }
 
-    date.setDate(date.getDate() + parseInt(Drupal.settings.eu_cookie_compliance.cookie_lifetime));
-    $.cookie(cookieName, status, { expires: date, path: path, domain: domain });
+
+    var cookieSession = parseInt(Drupal.settings.eu_cookie_compliance.cookie_session);
+    if (cookieSession) {
+      $.cookie(cookieName, status, { path: path, domain: domain });
+    } else {
+      var lifetime = parseInt(Drupal.settings.eu_cookie_compliance.cookie_lifetime);
+      date.setDate(date.getDate() + lifetime);
+      $.cookie(cookieName, status, { expires: date, path: path, domain: domain });
+    }
     $(document).trigger('eu_cookie_compliance.changeStatus', [status]);
 
     // Store consent if applicable.

@@ -270,6 +270,7 @@ function eu_cookie_compliance_page_build(&$page) {
         'domain' => variable_get('eu_cookie_compliance_domain', ''),
         'popup_eu_only_js' => isset($popup_settings['eu_only_js']) ? $popup_settings['eu_only_js'] : 0,
         'cookie_lifetime' => variable_get('eu_cookie_compliance_cookie_lifetime', 100),
+        'cookie_session' => empty($popup_settings['cookie_session']) ? FALSE : $popup_settings['cookie_session'],
         'disagree_do_not_show_popup' => isset($popup_settings['disagree_do_not_show_popup']) ? $popup_settings['disagree_do_not_show_popup'] : 0,
         'method' => $method,
         'whitelisted_cookies' => !empty($popup_settings['whitelisted_cookies']) ? $popup_settings['whitelisted_cookies'] : '',

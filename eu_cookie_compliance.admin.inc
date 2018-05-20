@@ -594,6 +594,11 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     '#title' => t('Cookie lifetime'),
     '#default_value' => variable_get('eu_cookie_compliance_cookie_lifetime', 100),
     '#description' => t('How long does the system remember the user’s choice, in days.'),
+    '#states' => array(
+      'enabled' => array(
+        "input[name='eu_cookie_compliance[cookie_session]']" => array('checked' => FALSE),
+      ),
+    ),
   );
 
   // Adding option to add/remove banner on specified domains.
@@ -647,6 +652,13 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     '#title' => t('Let screen readers see the banner before other links on the page.'),
     '#default_value' => isset($popup_settings['better_support_for_screen_readers']) ? $popup_settings['better_support_for_screen_readers'] : 0,
     '#description' => t('Enable this if you want to place the banner as the first HTML element on the page. This will make it possible for screen readers to close the banner without tabbing through all links on the page.'),
+  );
+
+  $form['advanced']['eu_cookie_compliance']['cookie_session'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Prompt for consent (from the same user) at every new browser session'),
+    '#description' => t("This sets cookie lifetime to 0, invalidating the cookie at the end of the browser session. To set a cookie lifetime greater than 0, uncheck this option. Note that some users will find this behavior highly annoying, and it's recommended to double-check with the legal advisor whether you really need this option enabled."),
+    '#default_value' => isset($popup_settings['cookie_session']) ? $popup_settings['cookie_session'] : FALSE,
   );
 
   $form = system_settings_form($form);
