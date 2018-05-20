@@ -136,6 +136,13 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     '#description' => t('Include the full path of JavaScripts, each on a separate line. When using the opt-in or opt-out consent options, you can block certain JavaScript files from being loaded when consent isn’t given. The on-site JavaScripts should be written as root relative paths <strong>without the leading slash</strong>, and off-site JavaScripts should be written as complete URLs <strong>with the leading http(s)://.</strong> Note that after the user gives consent, the scripts will be executed in the order you enter here.'),
   );
 
+  $form['javascripts']['eu_cookie_compliance']['disable_google_analytics'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Block Google Analytics'),
+    '#default_value' => $popup_settings['disable_google_analytics'],
+    '#description' => t('Prevents Google Analytics from running when the user hasn’t consented.'),
+  );
+
   $form['cookies'] = array(
     '#type' => 'fieldset',
     '#title' => t('Cookie handling'),
@@ -748,6 +755,7 @@ function eu_cookie_compliance_admin_form_submit($form, &$form_state) {
       user_role_revoke_permissions($rid, array($permission));
     }
   }
+  eu_cookie_compliance_module_set_weight();
 }
 
 /**
