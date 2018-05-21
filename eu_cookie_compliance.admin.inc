@@ -345,7 +345,7 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
 
   $form['withdraw_consent']['eu_cookie_compliance']['withdraw_tab_button_label'] = array(
     '#type' => 'textfield',
-    '#title' => t('Privacy settings tab'),
+    '#title' => t('Privacy settings tab label'),
     '#default_value' => isset($popup_settings['withdraw_tab_button_label']) ? $popup_settings['withdraw_tab_button_label'] : '',
     '#description' => t('Tab button that reveals/hides the withdraw message and action button when clicked.'),
   );
