@@ -271,26 +271,26 @@ function eu_cookie_compliance_update_7006(&$sandbox) {
  * Version 1.24. Be sure weight of the module is higher than jQuery Update.
  */
 function eu_cookie_compliance_update_7007(&$sandbox) {
-  if(module_exists('jquery_update')) {
-    // Get the weight of the jquery update module
+  if (module_exists('jquery_update')) {
+    // Get the weight of the jquery update module.
     $result = db_select('system', 's')
-    ->fields('s', array('weight'))
-    ->condition('name', 'jquery_update', '=')
-    ->execute();
+      ->fields('s', array('weight'))
+      ->condition('name', 'jquery_update', '=')
+      ->execute();
     $weight = !empty($result) ? $result->fetchField() : 0;
 
     // Set the weight of this module to 1 heavier.
     db_update('system')
-    ->fields(array('weight' => $weight + 1))
-    ->condition('name', 'eu_cookie_compliance', '=')
-    ->execute();
-  }  
+      ->fields(array('weight' => $weight + 1))
+      ->condition('name', 'eu_cookie_compliance', '=')
+      ->execute();
+  }
 }
 
 /**
  * Add config variables for the withdraw banner.
  */
-function eu_cookie_compliance_update_7009(&$sandbox) {
+function eu_cookie_compliance_update_7008(&$sandbox) {
   $default_filter_format = filter_default_format();
   if ($default_filter_format == 'filtered_html' && filter_format_load('full_html')) {
     $default_filter_format = 'full_html';
