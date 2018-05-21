@@ -263,7 +263,6 @@
     location.reload();
   };
 
-
   Drupal.eu_cookie_compliance.moreInfoAction = function () {
     if (Drupal.settings.eu_cookie_compliance.disagree_do_not_show_popup) {
       Drupal.eu_cookie_compliance.setStatus(0);
