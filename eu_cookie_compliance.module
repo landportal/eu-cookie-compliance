@@ -326,16 +326,6 @@ function eu_cookie_compliance_page_build(&$page) {
     // if the script is loaded in the header.
     drupal_add_js('var eu_cookie_compliance_cookie_name = "' . (!empty($popup_settings['cookie_name']) ? $popup_settings['cookie_name'] : '') . '";', array('type' => 'inline', 'scope' => $script_scope));
 
-    $ga_id_is_set = FALSE;
-    // To disable Google Analytics until cookies are agreed, we need to have
-    // the GA id available in the settings.
-    if (module_exists('googleanalytics')) {
-      if ($id = variable_get('googleanalytics_account')) {
-        $ga_id_is_set = TRUE;
-        $data['variables']['GA_id'] = $id;
-      }
-    }
-
     drupal_add_js(array('eu_cookie_compliance' => $data['variables']), array('type' => 'setting', 'scope' => $script_scope));
     if (!isset($popup_settings['use_bare_css']) || $popup_settings['use_bare_css'] == 0) {
       drupal_add_css(drupal_get_path('module', 'eu_cookie_compliance') . '/css/eu_cookie_compliance.css');
@@ -345,11 +335,6 @@ function eu_cookie_compliance_page_build(&$page) {
     }
     drupal_add_library('system', 'jquery.cookie');
     drupal_add_js(drupal_get_path('module', 'eu_cookie_compliance') . '/js/eu_cookie_compliance.js', array('type' => 'file', 'scope' => $script_scope, 'group' => JS_THEME, 'weight' => 100));
-    // Disable Google Analytics until cookies are agreed.
-    if (module_exists('googleanalytics') && $ga_id_is_set && $popup_settings['disable_google_analytics'] && $popup_settings['method'] != 'default') {
-      drupal_add_js(drupal_get_path('module', 'eu_cookie_compliance') . '/js/google_analytics.js', array('type' => 'file', 'scope' => $script_scope, 'group' => JS_THEME, 'weight' => 100));
-    }
-
   }
 }
 
@@ -656,40 +641,3 @@ function eu_cookie_compliance_store_consent($type) {
   drupal_json_output($result);
   drupal_exit();
 }
-
-
-
-/**
- * Set proper module weight.
- */
-function eu_cookie_compliance_module_set_weight() {
-  $weight = 1;
-  $exclude_modules = array(
-    // We need to exclude Google Analytics and handle it separately, since it
-    // should have weight higher than this module.
-    'googleanalytics',
-    'eu_cookie_compliance',
-  );
-
-  $extension_config = db_select('system', 's')
-    ->fields('s', array('name', 'weight'))
-    ->condition('status', 1)
-    ->execute();
-
-  // Loop through all installed modules to find the highest weight.
-  foreach ($extension_config as $module) {
-    if ($module->weight > $weight && !in_array($module->name, $exclude_modules)) {
-      $weight = $module->weight + 1;
-    }
-  }
-  // Set weight of Google Analytics to this module + 1.
-  db_update('system')
-    ->fields(array('weight' => $weight + 1))
-    ->condition('name', 'googleanalytics', '=')
-    ->execute();
-  db_update('system')
-    ->fields(array('weight' => $weight))
-    ->condition('name', 'eu_cookie_compliance', '=')
-    ->execute();
-}
-

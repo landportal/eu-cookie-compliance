@@ -271,34 +271,20 @@ function eu_cookie_compliance_update_7006(&$sandbox) {
  * Version 1.24. Be sure weight of the module is higher than jQuery Update.
  */
 function eu_cookie_compliance_update_7007(&$sandbox) {
-  if (module_exists('jquery_update')) {
-    // Get the weight of the jquery update module.
+  if(module_exists('jquery_update')) {
+    // Get the weight of the jquery update module
     $result = db_select('system', 's')
-      ->fields('s', array('weight'))
-      ->condition('name', 'jquery_update', '=')
-      ->execute();
+    ->fields('s', array('weight'))
+    ->condition('name', 'jquery_update', '=')
+    ->execute();
     $weight = !empty($result) ? $result->fetchField() : 0;
 
     // Set the weight of this module to 1 heavier.
     db_update('system')
-      ->fields(array('weight' => $weight + 1))
-      ->condition('name', 'eu_cookie_compliance', '=')
-      ->execute();
-  }
-}
-
-/**
- * Block Google Analytics if the consent method isn't "Consent by default".
- */
-function eu_cookie_compliance_update_7008(&$sandbox) {
-  // Set module weight.
-  eu_cookie_compliance_module_set_weight();
-  // Add setting for Google Analytics.
-  $eu_cookie_settings = variable_get('eu_cookie_compliance');
-  $method = empty($eu_cookie_settings['method']) ? 'default' : $eu_cookie_settings['method'];
-  $disable_ga = ($method == 'default') ? 0 : 1;
-  $eu_cookie_settings['disable_google_analytics'] = $disable_ga;
-  variable_set('eu_cookie_compliance', $eu_cookie_settings);
+    ->fields(array('weight' => $weight + 1))
+    ->condition('name', 'eu_cookie_compliance', '=')
+    ->execute();
+  }  
 }
 
 /**
