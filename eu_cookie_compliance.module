@@ -158,10 +158,12 @@ function eu_cookie_compliance_page_build(&$page) {
       $position = $popup_settings['popup_position'] ? 'top' : 'bottom';
       if (empty($popup_settings['use_bare_css'])) {
         if ($popup_settings['popup_bg_hex'] != '') {
-          $data['css'] = '#sliding-popup.sliding-popup-' . $position . ' {background:#' . check_plain($popup_settings['popup_bg_hex']) . ';}';
+          $data['css'] = '#sliding-popup.sliding-popup-' . $position . ', #sliding-popup.sliding-popup-' . $position . ' .eu-cookie-withdraw-banner, .eu-cookie-withdraw-tab {background:#' . check_plain($popup_settings['popup_bg_hex']) . ';}
+          #sliding-popup.sliding-popup-' . $position . '.eu-cookie-withdraw-wrapper {background: transparent}';
         }
         if ($popup_settings['popup_text_hex'] != '') {
-          $data['css'] .= '#sliding-popup .popup-content #popup-text h1, #sliding-popup .popup-content #popup-text h2, #sliding-popup .popup-content #popup-text h3, #sliding-popup .popup-content #popup-text p, .eu-cookie-compliance-more-button, .eu-cookie-compliance-secondary-button {color:#' . check_plain($popup_settings['popup_text_hex']) . ' !important;}';
+          $data['css'] .= '#sliding-popup .popup-content #popup-text h1, #sliding-popup .popup-content #popup-text h2, #sliding-popup .popup-content #popup-text h3, #sliding-popup .popup-content #popup-text p, .eu-cookie-compliance-more-button, .eu-cookie-compliance-secondary-button, .eu-cookie-withdraw-tab {color: #' . check_plain($popup_settings['popup_text_hex']) . ' !important;}
+          .eu-cookie-withdraw-tab { border-color: #' . check_plain($popup_settings['popup_text_hex']) . ';}';
 
         }
       }
@@ -218,6 +220,7 @@ function eu_cookie_compliance_page_build(&$page) {
       $popup_text_info = str_replace(array("\r", "\n"), '', $popup_settings['popup_info']['value']);
       $popup_text_agreed = str_replace(array("\r", "\n"), '', $popup_settings['popup_agreed']['value']);
       $mobile_popup_text_info = str_replace(array("\r", "\n"), '', !empty($popup_settings['mobile_popup_info']['value']) ? $popup_settings['mobile_popup_info']['value'] : '');
+      $withdraw_markup = str_replace(array("\r", "\n"), '', !empty($popup_settings['withdraw_message']['value']) ? $popup_settings['withdraw_message']['value'] : '');
       $html_info = theme('eu_cookie_compliance_popup_info', array(
         'message' => check_markup($popup_text_info, $popup_settings['popup_info']['format'], FALSE),
         'agree_button' => $primary_button_label,
@@ -239,11 +242,18 @@ function eu_cookie_compliance_page_build(&$page) {
         'hide_button' => $popup_settings['popup_hide_button_message'],
         'find_more_button' => $show_disagree_buttons ? $popup_settings['popup_find_more_button_message'] : FALSE,
       ));
+      $withdraw_markup = theme('eu_cookie_compliance_withdraw', array(
+        'message' => check_markup($withdraw_markup, $popup_settings['withdraw_message']['format'], FALSE),
+        'withdraw_tab_button_label' => !empty($popup_settings['withdraw_tab_button_label']) ? $popup_settings['withdraw_tab_button_label'] : '',
+        'withdraw_action_button_label' => !empty($popup_settings['withdraw_action_button_label']) ? $popup_settings['withdraw_action_button_label'] : '',
+      ));
       // Check if theme_debug is enabled.
       if (variable_get('theme_debug') == 1) {
         // Remove unwanted HTML comments.
         $html_info = preg_replace('/<!--(.|\s)*?-->/', '', $html_info);
+        $mobile_html_info = preg_replace('/<!--(.|\s)*?-->/', '', $mobile_html_info);
         $html_agreed = preg_replace('/<!--(.|\s)*?-->/', '', $html_agreed);
+        $withdraw_markup = preg_replace('/<!--(.|\s)*?-->/', '', $withdraw_markup);
       }
       $data['variables'] = array(
         'popup_enabled' => $popup_settings['popup_enabled'],
@@ -274,6 +284,8 @@ function eu_cookie_compliance_page_build(&$page) {
         'disagree_do_not_show_popup' => isset($popup_settings['disagree_do_not_show_popup']) ? $popup_settings['disagree_do_not_show_popup'] : 0,
         'method' => $method,
         'whitelisted_cookies' => !empty($popup_settings['whitelisted_cookies']) ? $popup_settings['whitelisted_cookies'] : '',
+        'withdraw_markup' => $withdraw_markup,
+        'withdraw_enabled' => !empty($popup_settings['withdraw_enabled']) ? $popup_settings['withdraw_enabled'] : FALSE,
       );
       // For some reason, we're getting the wrong language when editing the
       // localized form, so we shouldn't cache.
@@ -379,6 +391,15 @@ function eu_cookie_compliance_theme() {
         'message' => NULL,
         'hide_button' => NULL,
         'find_more_button' => NULL,
+      ),
+      'path' => $path,
+    ),
+    'eu_cookie_compliance_withdraw' => array(
+      'template' => 'eu-cookie-compliance-withdraw',
+      'variables' => array(
+        'withdraw_tab_button_label' => NULL,
+        'message' => NULL,
+        'withdraw_action_button_label' => NULL,
       ),
       'path' => $path,
     ),

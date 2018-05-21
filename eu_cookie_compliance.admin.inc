@@ -314,6 +314,56 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
     ),
   );
 
+  $form['withdraw_consent'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Withdraw consent'),
+    '#collapsible' => TRUE,
+    '#collapsed' => FALSE,
+    '#states' => array(
+      'visible' => array(
+        "input[name='eu_cookie_compliance[method]']" => array('!value' => 'default'),
+      ),
+    ),
+  );
+
+  $form['withdraw_consent']['eu_cookie_compliance'] = array(
+    '#type' => 'item',
+    '#tree' => TRUE,
+  );
+
+  $form['withdraw_consent']['eu_cookie_compliance']['info'] = array(
+    '#type' => 'markup',
+    '#markup' => t('GDPR requires that withdrawing consent for handling personal information should be as easy as giving consent. This module offers a tab button that when clicked brings up a message and a button that can be used to withdraw consent.'),
+  );
+
+  $form['withdraw_consent']['eu_cookie_compliance']['withdraw_enabled'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Enable floating privacy settings tab and withdraw consent banner'),
+    '#default_value' => isset($popup_settings['withdraw_enabled']) ? $popup_settings['withdraw_enabled'] : '',
+  );
+
+  $form['withdraw_consent']['eu_cookie_compliance']['withdraw_message'] = array(
+    '#type' => 'text_format',
+    '#title' => t('Withdraw consent banner message'),
+    '#default_value' => isset($popup_settings['withdraw_message']['value']) ? $popup_settings['withdraw_message']['value'] : '',
+    '#description' => t('Text that will be displayed in the banner that appears when the privacy settings tab is clicked.'),
+    '#format' => isset($popup_settings['withdraw_message']['format']) ? $popup_settings['withdraw_message']['format'] : $default_filter_format,
+  );
+
+  $form['withdraw_consent']['eu_cookie_compliance']['withdraw_tab_button_label'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Privacy settings tab'),
+    '#default_value' => isset($popup_settings['withdraw_tab_button_label']) ? $popup_settings['withdraw_tab_button_label'] : '',
+    '#description' => t('Tab button that reveals/hides the withdraw message and action button when clicked.'),
+  );
+
+  $form['withdraw_consent']['eu_cookie_compliance']['withdraw_action_button_label'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Withdraw consent action button label'),
+    '#default_value' => isset($popup_settings['withdraw_action_button_label']) ? $popup_settings['withdraw_action_button_label'] : '',
+    '#description' => t('This button will withdraw consent when clicked.'),
+  );
+
   $form['thank_you'] = array(
     '#type' => 'fieldset',
     '#collapsible' => TRUE,

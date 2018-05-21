@@ -102,6 +102,15 @@ function eu_cookie_compliance_install() {
     'fixed_top_position' => TRUE,
     'consent_storage_method' => 'do_not_store',
     'disabled_javascripts' => '',
+    'cookie_session' => 0,
+    'disable_google_analytics' => 0,
+    'withdraw_message' => array(
+      'value' => '<h2>We use cookies on this site to enhance your user experience</h2><p>You have given your consent for us to set cookies.</p>',
+      'format' => $default_filter_format,
+    ),
+    'withdraw_action_button_label' => 'Withdraw consent',
+    'withdraw_tab_button_label' => 'Privacy settings',
+    'withdraw_enabled' => 1,
   );
   variable_set('eu_cookie_compliance', $popup_settings);
 
@@ -289,5 +298,24 @@ function eu_cookie_compliance_update_7008(&$sandbox) {
   $method = empty($eu_cookie_settings['method']) ? 'default' : $eu_cookie_settings['method'];
   $disable_ga = ($method == 'default') ? 0 : 1;
   $eu_cookie_settings['disable_google_analytics'] = $disable_ga;
+  variable_set('eu_cookie_compliance', $eu_cookie_settings);
+}
+
+/**
+ * Add config variables for the withdraw banner.
+ */
+function eu_cookie_compliance_update_7009(&$sandbox) {
+  $default_filter_format = filter_default_format();
+  if ($default_filter_format == 'filtered_html' && filter_format_load('full_html')) {
+    $default_filter_format = 'full_html';
+  }
+  $eu_cookie_settings = variable_get('eu_cookie_compliance');
+  $eu_cookie_settings['withdraw_message'] = array(
+    'value' => '<h2>We use cookies on this site to enhance your user experience</h2><p>You have given your consent for us to set cookies.</p>',
+    'format' => $default_filter_format,
+  );
+  $eu_cookie_settings['withdraw_action_button_label'] = 'Withdraw consent';
+  $eu_cookie_settings['withdraw_tab_button_label'] = 'Privacy settings';
+  $eu_cookie_settings['withdraw_enabled'] = 1;
   variable_set('eu_cookie_compliance', $eu_cookie_settings);
 }
