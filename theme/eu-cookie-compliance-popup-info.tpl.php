@@ -26,19 +26,178 @@
  *   (if visible).
  */
 ?>
+
+<style>
+
+#sliding-popup .popup-content #popup-text {
+  width: 60%;
+}
+
+#popup-buttons h2, #popup-buttons p {
+  color:#fff !important;
+}
+
+.popup-content-inner {
+  padding-left: 0px;
+  padding-right: 20px;
+}
+
+.mySlides {
+  display: none;
+  box-sizing: border-box;
+ }
+
+
+/* Slideshow container */
+.slideshow-container {
+  max-width: 1000px;
+  position: relative;
+  margin: auto;
+  height: auto;
+  box-sizing: border-box;
+}
+
+/* Next & previous buttons */
+.prev, .next {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  width: auto;
+  padding: 16px;
+  margin-top: -22px;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  transition: 0.6s ease;
+  border-radius: 0 3px 3px 0;
+  box-sizing: border-box;
+}
+
+/* Position the "next button" to the right */
+.next {
+  right: 0;
+  border-radius: 3px 0 0 3px;
+  box-sizing: border-box;
+}
+
+/* On hover, add a black background color with a little bit see-through */
+.prev:hover, .next:hover {
+  background-color: rgba(0,0,0,0.8);
+  box-sizing: border-box;
+}
+
+/* Caption text */
+.text {
+  color: #f2f2f2;
+  font-size: 15px;
+  padding: 8px 12px;
+  bottom: 8px;
+  width: 100%;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+/* Number text (1/3 etc) */
+.numbertext {
+  color: #f2f2f2;
+  font-size: 12px;
+  padding: 8px 12px;
+  box-sizing: border-box;
+}
+
+/* The dots/bullets/indicators */
+.dot {
+  cursor: pointer;
+  height: 15px;
+  width: 15px;
+  margin: 0 2px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+  transition: background-color 0.6s ease;
+  box-sizing: border-box;
+}
+
+.active, .dot:hover {
+  background-color: #717171;
+  box-sizing: border-box;
+}
+
+/* Fading animation */
+.fade {
+  -webkit-animation-name: fade;
+  -webkit-animation-duration: 1.5s;
+  animation-name: fade;
+  animation-duration: 1.5s;
+  box-sizing: border-box;
+}
+
+@-webkit-keyframes fade {
+  from {opacity: .4}
+  to {opacity: 1}
+}
+
+@keyframes fade {
+  from {opacity: .4}
+  to {opacity: 1}
+}
+
+/* On smaller screens, decrease text size */
+@media only screen and (max-width: 300px) {
+  .prev, .next,.text {font-size: 11px}
+}
+#sliding-popup .popup-content #popup-text {
+  width:100%;
+}
+</style>
+
+
 <div>
   <div class ="popup-content info">
+
     <div id="popup-text">
-      <?php print $message ?>
-      <?php if ($disagree_button) : ?>
-        <button type="button" class="find-more-button eu-cookie-compliance-more-button"><?php print $disagree_button; ?></button>
-      <?php endif; ?>
+      <div class="popup-content-inner">
+        <div class="slideshow-container">
+
+        <div class="mySlides fade">
+          <div class="text"><?php print $message ?></div>
+        </div>
+
+        <div class="mySlides fade">
+          <div class="text"><?php print $message_1 ?></div>
+        </div>
+
+        <div class="mySlides fade">
+          <div class="text"><?php print $message_2 ?></div>
+        </div>
+
+        <span class="prev" data-id="-1">&#10094;</span>
+        <span class="next" data-id="1">&#10095;</span>
+
+        </div>
+
+        <br>
+
+        <div style="text-align:center">
+          <span class="dot" data-id="0"></span>
+          <span class="dot" data-id="1"></span>
+          <span class="dot" data-id="2"></span>
+        </div>
+
+        <?php if ($disagree_button) : ?>
+          <button type="button" class="find-more-button eu-cookie-compliance-more-button"><?php print $disagree_button; ?></button>
+        <?php endif; ?>
+
+    </div> <!-- end of popup-content-inner-->
+
     </div>
+
     <div id="popup-buttons">
-      <button type="button" class="<?php print $primary_button_class; ?>"><?php print $agree_button; ?></button>
-      <?php if ($secondary_button_label) : ?>
-        <button type="button" class="<?php print $secondary_button_class; ?>" ><?php print $secondary_button_label; ?></button>
-      <?php endif; ?>
+        <button type="button" class="<?php print $primary_button_class; ?>"><?php print $agree_button; ?></button>
+        <?php if ($secondary_button_label) : ?>
+          <button type="button" class="<?php print $secondary_button_class; ?>" ><?php print $secondary_button_label; ?></button>
+        <?php endif; ?>
     </div>
+
   </div>
 </div>

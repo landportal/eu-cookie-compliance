@@ -210,10 +210,26 @@ function eu_cookie_compliance_admin_form($form, $form_state) {
 
   $form['popup_message']['eu_cookie_compliance']['popup_info'] = array(
     '#type' => 'text_format',
-    '#title' => t('Cookie information banner message'),
+    '#title' => t('Cookie information banner message (slide 1)'),
     '#default_value' => isset($popup_settings['popup_info']['value']) ? $popup_settings['popup_info']['value'] : '',
     '#required' => TRUE,
     '#format' => isset($popup_settings['popup_info']['format']) ? $popup_settings['popup_info']['format'] : $default_filter_format,
+  );
+
+  $form['popup_message']['eu_cookie_compliance']['popup_info_1'] = array(
+    '#type' => 'text_format',
+    '#title' => t('Cookie information banner message (slide 2)'),
+    '#default_value' => isset($popup_settings['popup_info_1']['value']) ? $popup_settings['popup_info_1']['value'] : '',
+    '#required' => TRUE,
+    '#format' => isset($popup_settings['popup_info_1']['format']) ? $popup_settings['popup_info_1']['format'] : $default_filter_format,
+  );
+
+  $form['popup_message']['eu_cookie_compliance']['popup_info_2'] = array(
+    '#type' => 'text_format',
+    '#title' => t('Cookie information banner message  (slide 3)'),
+    '#default_value' => isset($popup_settings['popup_info_2']['value']) ? $popup_settings['popup_info_2']['value'] : '',
+    '#required' => TRUE,
+    '#format' => isset($popup_settings['popup_info_2']['format']) ? $popup_settings['popup_info_2']['format'] : $default_filter_format,
   );
 
   $form['popup_message']['eu_cookie_compliance']['use_mobile_message'] = array(
