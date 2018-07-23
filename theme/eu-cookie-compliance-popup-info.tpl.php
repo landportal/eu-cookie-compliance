@@ -106,7 +106,7 @@
 }
 
 /* The dots/bullets/indicators */
-.dot {
+#popup-text .dot {
   cursor: pointer;
   height: 15px;
   width: 15px;
@@ -118,26 +118,26 @@
   box-sizing: border-box;
 }
 
-.active, .dot:hover {
+#popup-text .active, #popup-text .dot:hover {
   background-color: #717171;
   box-sizing: border-box;
 }
 
 /* Fading animation */
-.fade {
-  -webkit-animation-name: fade;
+#popup-text .fade-anim {
+  -webkit-animation-name: fade-anim;
   -webkit-animation-duration: 1.5s;
-  animation-name: fade;
+  animation-name: fade-anim;
   animation-duration: 1.5s;
   box-sizing: border-box;
 }
 
-@-webkit-keyframes fade {
+@-webkit-keyframes fade-anim {
   from {opacity: .4}
   to {opacity: 1}
 }
 
-@keyframes fade {
+@keyframes fade-anim {
   from {opacity: .4}
   to {opacity: 1}
 }
@@ -159,15 +159,15 @@
       <div class="popup-content-inner">
         <div class="slideshow-container">
 
-        <div class="mySlides fade">
+        <div class="mySlides fade-anim">
           <div class="text"><?php print $message ?></div>
         </div>
 
-        <div class="mySlides fade">
+        <div class="mySlides fade-anim">
           <div class="text"><?php print $message_1 ?></div>
         </div>
 
-        <div class="mySlides fade">
+        <div class="mySlides fade-anim">
           <div class="text"><?php print $message_2 ?></div>
         </div>
 
