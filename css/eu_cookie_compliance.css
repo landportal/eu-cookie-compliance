@@ -13,7 +13,7 @@
 }
 
 .sliding-popup-bottom {
-  position: fixed;
+  /* position: fixed; */
 }
 
 .sliding-popup-top {
@@ -55,6 +55,7 @@
 }
 
 #sliding-popup .eu-cookie-compliance-default-button,
+#sliding-popup .eu-cookie-compliance-secondary-button,
 #sliding-popup .eu-cookie-compliance-hide-button,
 #sliding-popup .eu-cookie-compliance-more-button-thank-you,
 #sliding-popup .eu-cookie-withdraw-button {
@@ -78,7 +79,7 @@
   -webkit-border-radius: 6px;
   border-radius: 6px;
   border: 1px solid #dcdcdc;
-  color: #000;
+  color: #000 !important;
   font-family: Arial, sans-serif;
   font-weight: bold;
   padding: 4px 8px;
