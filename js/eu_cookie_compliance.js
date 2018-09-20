@@ -76,7 +76,7 @@
 
     if (!Drupal.settings.eu_cookie_compliance.popup_use_bare_css) {
       $banner.height(Drupal.settings.eu_cookie_compliance.popup_height)
-          .width(Drupal.settings.eu_cookie_compliance.popup_width);
+          .width(Drupal.settings.eu_cookie_compliance.popup_width).css({'display':'none'});
     }
     $html.hide();
     var height = 0;
@@ -120,28 +120,8 @@
   };
 
   Drupal.eu_cookie_compliance.toggleWithdrawBanner = function () {
-    var $wrapper = $('#sliding-popup');
-    var $tab = $('.eu-cookie-withdraw-tab');
-    var $bannerIsShowing = Drupal.settings.eu_cookie_compliance.popup_position ? parseInt($wrapper.css('top')) === 0 : parseInt($wrapper.css('bottom')) === 0;
-    var topBottom = (Drupal.settings.eu_cookie_compliance.popup_position ? 'top' : 'bottom');
-    var tabHeight = $tab.outerHeight();
-    var height = $wrapper.outerHeight();
-    if (Drupal.settings.eu_cookie_compliance.popup_position) {
-      if ($bannerIsShowing) {
-        $wrapper.animate({'top' : -1 * (height - tabHeight)}, Drupal.settings.eu_cookie_compliance.popup_delay);
-      }
-      else {
-        $wrapper.animate({'top' : 0}, Drupal.settings.eu_cookie_compliance.popup_delay);
-      }
-    }
-    else {
-      if ($bannerIsShowing) {
-        $wrapper.animate({'bottom' : -1 * (height - tabHeight)}, Drupal.settings.eu_cookie_compliance.popup_delay);
-      }
-      else {
-        $wrapper.animate({'bottom' : 0}, Drupal.settings.eu_cookie_compliance.popup_delay);
-      }
-    }
+    $('.eu-cookie-withdraw-banner').toggle();
+    $('html, body').animate({scrollTop:$(document).height()}, 'fast');
   };
 
   Drupal.eu_cookie_compliance.createPopup = function (html) {
@@ -509,7 +489,6 @@
   Drupal.eu_cookie_slider = {};
 
   Drupal.eu_cookie_slider.showSlides = function (slideIndex) {
-    console.log(slideIndex);
     var i;
     var slides = document.getElementsByClassName("mySlides");
     var dots = document.getElementsByClassName("dot");
