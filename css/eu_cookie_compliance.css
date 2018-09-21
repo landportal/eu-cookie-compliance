@@ -178,3 +178,12 @@
     max-width: 100%;
   }
 }
+
+
+#popup-buttons li {
+  list-style-type: none;
+}
+
+#popup-buttons li .find-more-button  {
+  margin-top: 15px;
+}

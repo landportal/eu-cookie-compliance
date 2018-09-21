@@ -184,19 +184,19 @@
           <span class="dot" data-id="2"></span>
         </div>
 
-        <?php if ($disagree_button) : ?>
-          <button type="button" class="find-more-button eu-cookie-compliance-more-button"><?php print $disagree_button; ?></button>
-        <?php endif; ?>
-
     </div> <!-- end of popup-content-inner-->
 
     </div>
 
     <div id="popup-buttons">
-        <button type="button" class="<?php print $primary_button_class; ?>"><?php print $agree_button; ?></button>
-        <?php if ($secondary_button_label) : ?>
+         <ul>
+          <li><button type="button" class="<?php print $primary_button_class; ?>"><?php print $agree_button; ?></button></li>
+          <li><?php if ($secondary_button_label) : ?>
           <button type="button" class="<?php print $secondary_button_class; ?>" ><?php print $secondary_button_label; ?></button>
-        <?php endif; ?>
+        <?php endif; ?></li>
+          <li><button type="button" class="find-more-button eu-cookie-compliance-more-button"><?php print $disagree_button; ?></button></li>
+         </ul>
+
     </div>
 
   </div>
