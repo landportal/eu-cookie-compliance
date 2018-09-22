@@ -31,6 +31,7 @@
 
 #sliding-popup .popup-content #popup-text {
   width: 60%;
+  text-align: unset !important;
 }
 
 #popup-buttons h2, #popup-buttons p {
@@ -189,14 +190,10 @@
     </div>
 
     <div id="popup-buttons">
-         <ul>
-          <li><button type="button" class="<?php print $primary_button_class; ?>"><?php print $agree_button; ?></button></li>
-          <li><?php if ($secondary_button_label) : ?>
-          <button type="button" class="<?php print $secondary_button_class; ?>" ><?php print $secondary_button_label; ?></button>
-        <?php endif; ?></li>
-          <li><button type="button" class="find-more-button eu-cookie-compliance-more-button"><?php print $disagree_button; ?></button></li>
-         </ul>
-
+      <button type="button" class="<?php print $primary_button_class; ?>"><?php print $agree_button; ?></button>
+      <?php if ($secondary_button_label) : ?>
+        <button type="button" class="<?php print $secondary_button_class; ?>" ><?php print $secondary_button_label; ?></button>
+      <?php endif; ?>
     </div>
 
   </div>
