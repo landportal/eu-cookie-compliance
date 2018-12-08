@@ -235,7 +235,7 @@
 
   Drupal.eu_cookie_compliance.declineAction = function () {
     Drupal.eu_cookie_compliance.setStatus(0);
-    $('#sliding-popup').animate({ bottom: $('#sliding-popup').outerHeight() * -1 }).trigger('eu_cookie_compliance_popup_close');
+    $('#sliding-popup').animate({ bottom: $('#sliding-popup').outerHeight() * -1 }).animate({ height: 'toggle'}).trigger('eu_cookie_compliance_popup_close');
   };
 
   Drupal.eu_cookie_compliance.withdrawAction = function () {

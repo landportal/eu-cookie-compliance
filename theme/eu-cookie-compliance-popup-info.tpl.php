@@ -106,6 +106,15 @@
   box-sizing: border-box;
 }
 
+#popup-text h1,
+#popup-text h2,
+#popup-text h3,
+#popup-text h4,
+#popup-text h5,
+#popup-text h6 {
+color:#fff;
+}
+
 /* The dots/bullets/indicators */
 #popup-text .dot {
   cursor: pointer;
