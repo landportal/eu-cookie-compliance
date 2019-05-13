@@ -644,7 +644,12 @@ function eu_cookie_compliance_store_consent($type) {
   // Get plugin.
   $consent_storage_plugin = ctools_get_plugins('eu_cookie_compliance', 'consent_storage', $consent_storage_method);
   $consent_storage_function = $consent_storage_plugin['consent_storage_callback'];
-  $result = $consent_storage_function($type);
+  if (is_string($consent_storage_function)) {
+    $result = $consent_storage_function($type);
+  }
+  else {
+    $result = "";
+  }
 
   drupal_json_output($result);
   drupal_exit();
